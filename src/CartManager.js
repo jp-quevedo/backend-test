@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { productsManager } from './ProductManager';
 
 class CartsManager{
 
@@ -35,7 +36,7 @@ class CartsManager{
             } else {
                 id = carts[carts.length-1].id+1
             }
-            const newCart = {id,...obj}
+            const newCart = [{id,...obj}]
             carts.push(newCart)
             await fs.promises.writeFile(this.path,JSON.stringify(carts))
             return newCart
@@ -46,12 +47,30 @@ class CartsManager{
 
     async getCartById(cartId){
         try {
-            const carts = await this.getCarts({})
+            const carts = await this.getCarts([{}])
             const cart = carts.find(c=>c.id === cartId)
             if(cart){
                 return cart
             } else {
                 return 'The cart requested does not exist'
+            }
+        } catch (error) {
+            return error
+        }
+    }
+
+    async addProductToCart(cartId, productId){
+        try {
+            const carts = await this.getCarts([{}])
+            const cart = carts.find(c=>c.id === cartId)
+            const products = await this.getProducts()
+            const product = products.find(p=>p.id === productId)
+            if(cart || product){
+                cart.push(product.id)
+                await fs.promises.writeFile(this.path,JSON.stringify(cart))
+                return cart
+            } else {
+                return 'The cart/product requested does not exist'
             }
         } catch (error) {
             return error

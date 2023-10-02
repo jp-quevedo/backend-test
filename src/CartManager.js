@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { productsManager } from './ProductManager';
+import { productsManager } from './ProductManager.js';
 
 class CartsManager{
 
@@ -16,8 +16,8 @@ class CartsManager{
             if(fs.existsSync(this.path)){
                 const info = await fs.promises.readFile(this.path,'utf-8')
                 const parsedInfo = JSON.parse(info)
-                return limit === "5"
-                    ? parsedInfo.slice(0,0+5)
+                return limit
+                    ? parsedInfo.slice(0,limit)
                     : parsedInfo
             } else {
                 return []
@@ -47,7 +47,7 @@ class CartsManager{
 
     async getCartById(cartId){
         try {
-            const carts = await this.getCarts([{}])
+            const carts = await this.getCarts({})
             const cart = carts.find(c=>c.id === cartId)
             if(cart){
                 return cart
@@ -61,7 +61,7 @@ class CartsManager{
 
     async addProductToCart(cartId, productId){
         try {
-            const carts = await this.getCarts([{}])
+            const carts = await this.getCarts()
             const cart = carts.find(c=>c.id === cartId)
             const products = await this.getProducts()
             const product = products.find(p=>p.id === productId)

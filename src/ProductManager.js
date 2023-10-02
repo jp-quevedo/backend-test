@@ -15,8 +15,8 @@ class ProductsManager{
             if(fs.existsSync(this.path)){
                 const info = await fs.promises.readFile(this.path,'utf-8')
                 const parsedInfo = JSON.parse(info)
-                return limit === "5"
-                    ? parsedInfo.slice(0,0+5)
+                return limit
+                    ? parsedInfo.slice(0,limit)
                     : parsedInfo
             } else {
                 return []

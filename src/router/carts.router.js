@@ -33,12 +33,8 @@ router.get('/:cartId',async(req,res)=>{
 })
 
 router.post('/',async(req,res)=>{
-    const {products, quantity} = req.body;
-    if(!products || !quantity){
-        return res.status(400).json({message:'Some data is missing'});
-    }
     try{
-        const newCart = await cartsManager.createCart(req.body)
+        const newCart = await cartsManager.createCart()
         res.status(200).json({message:'Cart created',cart:newCart})
     }catch(error){
         res.status(500).json({message:error})
@@ -49,13 +45,7 @@ router.post('/:cartId/products/:productId',async(req,res)=>{
         const {cartId} = req.params
         const {productId} = req.params
     try{
-        const cart = await cartsManager.getCartById(+cartId)
-        const product = await productsManager.getProductById(+productId)
-        if(!cart || !product){
-            res.status(400).json({message:'Could not find any cart or product with the ids sent'})
-        }else{
-            res.status(200).json({message:'The following product was added to the cart',product})
-        }
+        await cartsManager.addProductToCart(cartId,productId)
     }catch(error){
         res.status(500).json({message:error})
     }

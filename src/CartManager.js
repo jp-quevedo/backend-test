@@ -1,3 +1,4 @@
+import { Console } from 'console';
 import fs from 'fs';
 import { productsManager } from './ProductManager.js';
 
@@ -10,15 +11,12 @@ class CartsManager{
         }
     }
 
-    async getCarts(queryObj){
-        const { limit } = queryObj
+    async getCarts(){
         try {
             if(fs.existsSync(this.path)){
                 const info = await fs.promises.readFile(this.path,'utf-8')
                 const parsedInfo = JSON.parse(info)
-                return limit
-                    ? parsedInfo.slice(0,limit)
-                    : parsedInfo
+                return parsedInfo
             } else {
                 return []
             }
@@ -27,7 +25,7 @@ class CartsManager{
         }
     }
 
-    async createCart(obj){
+    async createCart(){
         try {
             const carts = await this.getCarts()
             let id
@@ -36,11 +34,12 @@ class CartsManager{
             } else {
                 id = carts[carts.length-1].id+1
             }
-            const newCart = [{id,...obj}]
+            const newCart = {id,products:[]}
             carts.push(newCart)
             await fs.promises.writeFile(this.path,JSON.stringify(carts))
             return newCart
         } catch (error) {
+            console.log(error)
             return error
         }
     }
@@ -62,20 +61,31 @@ class CartsManager{
     async addProductToCart(cartId, productId){
         try {
             const carts = await this.getCarts()
-            const cart = carts.find(c=>c.id === cartId)
-            const products = await this.getProducts()
-            const product = products.find(p=>p.id === productId)
-            if(cart || product){
-                cart.push(product.id)
-                await fs.promises.writeFile(this.path,JSON.stringify(cart))
-                return cart
-            } else {
-                return 'The cart/product requested does not exist'
+            const findCart = carts.find((cart)=>cart.id==cartId)
+            if(findCart){
+                const {products} = findCart
+                //verificar productid en base de productos
+                const findProductIndex = products.findIndex((product)=>product.id==productId)
+                if(findProductIndex!=-1){
+                    products[findProductIndex].quantity+=1
+                }else{
+                    products.push({id:productId,quantity:1})
+                }
+                const newCarts = carts.filter((cart)=>
+                cart.id==cartId
+                ? {id:cartId,products}
+                : cart
+                )
+                await fs.promises.writeFile(this.path,JSON.stringify(newCarts))                
+            }else{
+                return 'Carrito no encontrado'
             }
         } catch (error) {
             return error
         }
     }
+
+
 
     async deleteCart(cartId){
         try {
@@ -106,4 +116,4 @@ class CartsManager{
 
 }
 
-export const cartsManager = new CartsManager('Carts.json')
+export const cartsManager = new CartsManager('./src/dbs/Carts.json')

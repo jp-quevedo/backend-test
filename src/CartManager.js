@@ -64,33 +64,36 @@ class CartsManager{
             const findCart = carts.find((cart)=>cart.id==cartId)
             if(findCart){
                 const {products} = findCart
-                //verificar productid en base de productos
                 const findProductIndex = products.findIndex((product)=>product.id==productId)
                 if(findProductIndex!=-1){
                     products[findProductIndex].quantity+=1
                 }else{
-                    products.push({id:productId,quantity:1})
+                    const productsArray = await productsManager.getProducts({})
+                    const newProduct = productsArray.find((product)=>product.id==productId)
+                    if(newProduct){
+                        products.push({id:productId,quantity:1})
+                    }else{
+                        return 'The product requested does not exist'
+                    }
                 }
-                const newCarts = carts.filter((cart)=>
-                cart.id==cartId
+                const newCart = carts.filter((cart)=>
+                cart.id===cartId
                 ? {id:cartId,products}
                 : cart
                 )
-                await fs.promises.writeFile(this.path,JSON.stringify(newCarts))                
+                await fs.promises.writeFile(this.path,JSON.stringify(newCart))                
             }else{
-                return 'Carrito no encontrado'
+                return 'The cart requested does not exist'
             }
         } catch (error) {
             return error
         }
     }
 
-
-
     async deleteCart(cartId){
         try {
             const carts = await this.getCarts()
-            const cart = carts.find(p=>p.id === cartId)
+            const cart = carts.find(c=>c.id === cartId)
             if(!cart){
                 return -1
             }

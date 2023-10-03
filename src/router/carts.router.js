@@ -18,7 +18,6 @@ router.get('/',async(req,res)=>{
 })
 
 router.get('/:cartId',async(req,res)=>{
-    res.status(200).json({message:'Cart created',cart:newCart})
     const {cartId} = req.params
     try{
         const cart = await cartsManager.getCartById(+cartId)

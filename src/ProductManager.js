@@ -1,22 +1,22 @@
 import fs from 'fs';
 
-class ProductsManager{
+class ProductsManager {
 
-    constructor(path){
+    constructor(path) {
         this.path = path
-        if(!fs.existsSync(this.path)){
-            fs.writeFileSync(this.path,JSON.stringify([]))
+        if (!fs.existsSync(this.path)) {
+            fs.writeFileSync(this.path, JSON.stringify([]))
         }
     }
 
-    async getProducts(queryObj){
+    async getProducts(queryObj) {
         const { limit } = queryObj
         try {
-            if(fs.existsSync(this.path)){
-                const info = await fs.promises.readFile(this.path,'utf-8')
+            if (fs.existsSync(this.path)) {
+                const info = await fs.promises.readFile(this.path, 'utf-8')
                 const parsedInfo = JSON.parse(info)
                 return limit
-                    ? parsedInfo.slice(0,limit)
+                    ? parsedInfo.slice(0, limit)
                     : parsedInfo
             } else {
                 return []
@@ -26,29 +26,29 @@ class ProductsManager{
         }
     }
 
-    async createProduct(obj){
+    async createProduct(obj) {
         try {
             const products = await this.getProducts()
             let id
-            if(products.length === 0){
+            if (products.length === 0) {
                 id = 1
             } else {
-                id = products[products.length-1].id+1
+                id = products[products.length - 1].id + 1
             }
-            const newProduct = {id,...obj}
+            const newProduct = { id, ...obj }
             products.push(newProduct)
-            await fs.promises.writeFile(this.path,JSON.stringify(products))
+            await fs.promises.writeFile(this.path, JSON.stringify(products))
             return newProduct
         } catch (error) {
             return error
         }
     }
 
-    async getProductById(productId){
+    async getProductById(productId) {
         try {
             const products = await this.getProducts({})
-            const product = products.find(p=>p.id === productId)
-            if(product){
+            const product = products.find(p => p.id === productId)
+            if (product) {
                 return product
             } else {
                 return 'The product requested does not exist'
@@ -58,28 +58,28 @@ class ProductsManager{
         }
     }
 
-    async deleteProduct(productId){
+    async deleteProduct(productId) {
         try {
             const products = await this.getProducts()
-            const product = products.find(p=>p.id === productId)
+            const product = products.find(p => p.id === productId)
             if(!product){
                 return -1
             }
-            const newProductsArray = products.filter(product=>product.id !== productId)
-            await fs.promises.writeFile(this.path,JSON.stringify(newProductsArray))
+            const newProductsArray = products.filter(product => product.id !== productId)
+            await fs.promises.writeFile(this.path, JSON.stringify(newProductsArray))
             return 1
         } catch (error) {
             return error
         }
     }
 
-    async updateProduct(productId,updatedProduct){
+    async updateProduct(productId, updatedProduct) {
         try {
             const products = await this.getProducts()
-            const product = products.find(product=>product.id === productId)
-            Object.assign(product,updatedProduct)
-            const newProducts = products.map(p=>p.id == productId?product:p)
-            await fs.promises.writeFile(this.path,JSON.stringify(newProducts))
+            const product = products.find(product => product.id === productId)
+            Object.assign(product, updatedProduct)
+            const newProducts = products.map(p => p.id == productId ? product : p)
+            await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
         } catch (error) {
             return error
         }

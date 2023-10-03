@@ -13,4 +13,4 @@ const storage = multer.diskStorage({
 })
 */
 
-export const upload = multer({dest:__dirname+'/public/images/'})
+export const upload = multer({ dest: __dirname + '/public/images/' })

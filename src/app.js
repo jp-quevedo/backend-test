@@ -30,13 +30,28 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer)
 
+const messages = []
+
 socketServer.on('connection', (socket) => {
+
     console.log(`Client connected with id ${ socket.id }`)
+
     socket.on('disconnect', () => {
         console.log(`Client disconnected with id ${ socket.id }`)
     })
-    socket.on('message', (info) => {
-        names.push(info)
-        socketServer.emit('response', names)
+
+    socket.on('text', (info) => {
+        prices.push(info)
+        socketServer.emit('response', prices)
     })
+
+    socket.on('newUser', (user) => {
+        socket.broadcast.emit('newUserBroadcast', user)
+    })
+
+    socket.on('chatMessage', (info) => {
+        messages.push(info)
+        socketServer.emit('chat', messages)
+    })
+
 })

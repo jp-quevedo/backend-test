@@ -1,12 +1,12 @@
 const socketClient = io()
 
 const form = document.getElementById('form')
-const inputName = document.getElementById('name')
+const inputPrice = document.getElementById('price')
 
 form.onsubmit = (e) => {
     e.preventDefault()
-    const userName = inputName.value
-    socketClient.emit('message', userName)
+    const price = inputPrice.value
+    socketClient.emit('text', price)
 }
 
 socketClient.on('response', info => {

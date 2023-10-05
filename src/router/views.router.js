@@ -7,6 +7,10 @@ router.get('/websocket', (req, res) => {
     res.render('websocket')
 })
 
+router.get('/chat', (req, res) => {
+    res.render('chat')
+})
+
 router.get('/', (req, res) => {
     res.render('signup')
 })

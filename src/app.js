@@ -1,11 +1,12 @@
-import express from 'express';
-import usersRouter from './router/users.router.js';
-import productsRouter from './router/products.router.js';
-import cartsRouter from './router/carts.router.js';
-import viewsRouter from './router/views.router.js';
-import { __dirname } from './utils.js';
-import { engine } from 'express-handlebars';
-import { Server } from 'socket.io';
+import express from 'express'
+import handlebars from 'express-handlebars'
+import usersRouter from './router/users.router.js'
+import productsRouter from './router/products.router.js'
+import cartsRouter from './router/carts.router.js'
+import viewsRouter from './router/views.router.js'
+import { productsManager } from './ProductManager.js'
+import { __dirname } from './utils.js'
+import { Server } from 'socket.io'
 
 const app = express()
 
@@ -13,7 +14,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 
-app.engine('handlebars', engine())
+app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
@@ -40,11 +41,6 @@ socketServer.on('connection', (socket) => {
         console.log(`Client disconnected with id ${ socket.id }`)
     })
 
-    socket.on('text', (info) => {
-        prices.push(info)
-        socketServer.emit('response', prices)
-    })
-
     socket.on('newUser', (user) => {
         socket.broadcast.emit('newUserBroadcast', user)
     })
@@ -52,6 +48,11 @@ socketServer.on('connection', (socket) => {
     socket.on('chatMessage', (info) => {
         messages.push(info)
         socketServer.emit('chat', messages)
+    })
+
+    socket.on('createProduct', async(product) => {
+        const creatingProduct = await productsManager.createProduct(product)
+        socket.emit('productCreated', creatingProduct)
     })
 
 })

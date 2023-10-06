@@ -1,6 +1,6 @@
 const socketClient = io()
 
-const form = document.getElementById('chatForm')
+const chatForm = document.getElementById('chatForm')
 const inputMessage = document.getElementById('chatMessage')
 const userName = document.getElementById('chatName')
 const chatDiv = document.getElementById('chat')
@@ -33,7 +33,7 @@ socketClient.on('newUserBroadcast', (user) => {
       }).showToast()
 })
 
-form.onsubmit = (e) => {
+chatForm.onsubmit = (e) => {
     e.preventDefault()
     const infoMessage = {
         name: user,

@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs'
 
 class ProductsManager {
 
@@ -25,7 +25,7 @@ class ProductsManager {
             return error
         }
     }
-
+ 
     async createProduct(obj) {
         try {
             const products = await this.getProducts()

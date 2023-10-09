@@ -54,5 +54,10 @@ socketServer.on('connection', (socket) => {
         const creatingProduct = await productsManager.createProduct(product)
         socket.emit('productCreated', creatingProduct)
     })
+    
+    socket.on('deleteProduct', async(product) => {
+        const deletingProduct = await productsManager.deleteProduct(product)
+        socket.emit('productDeleted', deletingProduct)
+    })
 
 })

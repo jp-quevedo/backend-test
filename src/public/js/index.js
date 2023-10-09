@@ -1,5 +1,7 @@
 const socketClient = io()
-const productForm = document.getElementById('productForm')
+const addForm = document.getElementById('addForm')
+const deleteForm = document.getElementById('deleteForm')
+const productId = document.getElementById('productId')
 const productTitle = document.getElementById('productTitle')
 const productDescription = document.getElementById('productDescription')
 const productCode = document.getElementById('productCode')
@@ -9,7 +11,7 @@ const productStock = document.getElementById('productStock')
 const productCategory = document.getElementById('productCategory')
 const rtpTable = document.getElementById('rtpTable')
 
-productForm.onsubmit = (e) => {
+addForm.onsubmit = (e) => {
     e.preventDefault()
     const product = {
         title: productTitle.value,
@@ -35,8 +37,31 @@ socketClient.on('productCreated', (product) => {
             <td>${status}</td>
             <td>${stock}</td>
             <td>${category}</td>
-
         </tr>
     `
     rtpTable.innerHTML += productRow
 })
+
+deleteForm.onsubmit = (e) => {
+    e.preventDefault()
+    const product = {
+        id: +productId.value,
+    }
+    socketClient.emit('deleteProduct', product)
+}
+
+socketClient.on('productDeleted', (product) => {
+    const { id } = product
+    const productRow = `
+        <tr>
+            <td>${ id }</td>
+        </tr>
+    `
+    rtpTable.innerHTML += productRow
+})
+
+// para eliminar producto, emitir evento desde cliente para delete product
+// enviar id de producto en evento
+// servidor recibe y escucha el evento, llama a la funcion delete product del manager
+// responder al socket client de producto eliminado
+// {"id": 10,"title": "diez","description": "diez","code": "diez","price": 1,"status": true,"stock": 1,"category": "diez"}]

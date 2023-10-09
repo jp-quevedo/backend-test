@@ -1,6 +1,6 @@
 <div>
     <h2>Add Product</h2>
-    <form id='productForm'>
+    <form id='addForm'>
         Title: <input type='text' name='productTitle' id='productTitle'>
         Description: <input type='text' name='productDescription' id='productDescription'>
         Code: <input type='text' name='productCode' id='productCode'>
@@ -40,6 +40,14 @@
         {{/each}}
     </tbody>
 </table>
+
+<div>
+    <h2>Delete Product</h2>
+    <form id='deleteForm'>
+        Id: <input type='number' name='productId' id='productId'>
+        <input type='submit' value='Delete'>
+    </form>
+</div>
 
 <script src='/socket.io/socket.io.js'></script>
 <script src='/js/index.js'></script>

@@ -1,12 +1,13 @@
 import express from 'express'
 import handlebars from 'express-handlebars'
-import usersRouter from './router/users.router.js'
-import productsRouter from './router/products.router.js'
-import cartsRouter from './router/carts.router.js'
 import viewsRouter from './router/views.router.js'
-import { productsManager } from './ProductManager.js'
+import cartsRouter from './router/carts.router.js'
+import productsRouter from './router/products.router.js'
+import usersRouter from './router/users.router.js'
+import { productsManager } from './managers/ProductManager.js'
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
+import './dbs/config.js'
 
 const app = express()
 
@@ -18,10 +19,10 @@ app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
-app.use('/api/users', usersRouter)
-app.use('/api/products', productsRouter)
-app.use('/api/carts', cartsRouter)
 app.use('/api', viewsRouter)
+app.use('/api/carts', cartsRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/users', usersRouter)
 
 const PORT = 8080
 

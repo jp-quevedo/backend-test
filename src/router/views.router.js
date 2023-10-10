@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { usersManager } from '../UserManager.js'
-import { productsManager } from '../ProductManager.js'
+import { usersManager } from '../managers/UserManager.js'
+import { productsManager } from '../managers/ProductManager.js'
 
 const router = Router()
 

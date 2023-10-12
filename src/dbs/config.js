@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-const URI = "mongodb+srv://jp-quevedo:Strawhats10.@codercluster.78dr0xy.mongodb.net/ecommerce?retryWrites=true&w=majority"
+const URI = "mongodb+srv://coderuser:coderpass@codercluster.fg9aj6q.mongodb.net/ecommerce?retryWrites=true&w=majority"
 
 mongoose
     .connect(URI)

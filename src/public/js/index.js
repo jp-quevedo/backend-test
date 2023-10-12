@@ -44,24 +44,10 @@ socketClient.on('productCreated', (product) => {
 
 deleteForm.onsubmit = (e) => {
     e.preventDefault()
-    const product = {
-        id: +productId.value,
-    }
-    socketClient.emit('deleteProduct', product)
+    socketClient.emit('deleteProduct', +productId.value)
 }
 
-socketClient.on('productDeleted', (product) => {
-    const { id } = product
-    const productRow = `
-        <tr>
-            <td>${ id }</td>
-        </tr>
-    `
-    rtpTable.innerHTML += productRow
+socketClient.on('productDeleted', (deletingProduct) => {
+    rtpTable.innerHTML = ''
+    // .map products devueltos ()
 })
-
-// para eliminar producto, emitir evento desde cliente para delete product
-// enviar id de producto en evento
-// servidor recibe y escucha el evento, llama a la funcion delete product del manager
-// responder al socket client de producto eliminado
-// {"id": 10,"title": "diez","description": "diez","code": "diez","price": 1,"status": true,"stock": 1,"category": "diez"}]

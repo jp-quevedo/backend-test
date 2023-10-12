@@ -9,15 +9,12 @@ class ProductsManager {
         }
     }
 
-    async getProducts(queryObj) {
-        const { limit } = queryObj
+    async getProducts() {
         try {
             if (fs.existsSync(this.path)) {
                 const info = await fs.promises.readFile(this.path, 'utf-8')
                 const parsedInfo = JSON.parse(info)
-                return limit
-                    ? parsedInfo.slice(0, limit)
-                    : parsedInfo
+                return parsedInfo
             } else {
                 return []
             }
@@ -61,13 +58,9 @@ class ProductsManager {
     async deleteProduct(productId) {
         try {
             const products = await this.getProducts()
-            const product = products.find(p => p.id === productId)
-            if(!product){
-                return -1
-            }
-            const newProductsArray = products.filter(product => product.id !== productId)
-            await fs.promises.writeFile(this.path, JSON.stringify(newProductsArray))
-            return 1
+            const newProducts = products.filter(product => product.id != productId)
+            await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
+            return true
         } catch (error) {
             return error
         }

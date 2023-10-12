@@ -5,7 +5,7 @@ export default class BasicManager {
     }
 
     async findAll(){
-        return this.model.find()
+        return this.model.find().lean()
     }
 
     async findById(id){

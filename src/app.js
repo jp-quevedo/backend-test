@@ -62,3 +62,5 @@ socketServer.on('connection', (socket) => {
     })
 
 })
+
+// se debe habilitar ambas persistencias (atlas y fs)? separo por archivos? 

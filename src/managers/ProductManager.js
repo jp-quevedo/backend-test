@@ -58,9 +58,9 @@ class ProductsManager {
     async deleteProduct(productId) {
         try {
             const products = await this.getProducts()
-            const newProducts = products.filter(product => product.id != productId)
-            await fs.promises.writeFile(this.path, JSON.stringify(newProducts))
-            return true
+            const newProductsArray = products.filter(product => product.id != productId)
+            await fs.promises.writeFile(this.path, JSON.stringify(newProductsArray))
+            return newProductsArray
         } catch (error) {
             return error
         }

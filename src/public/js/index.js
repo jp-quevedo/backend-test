@@ -47,7 +47,19 @@ deleteForm.onsubmit = (e) => {
     socketClient.emit('deleteProduct', +productId.value)
 }
 
-socketClient.on('productDeleted', (deletingProduct) => {
-    rtpTable.innerHTML = ''
-    // .map products devueltos ()
+socketClient.on('productDeleted', (newProductsArray) => {
+    rtpTable.innerHTML = ' '
+    const productsUpdate = newProductsArray
+        .map((objProducts) => 
+        `<tr>
+            <td>${objProducts.id}</td>
+            <td>${objProducts.title}</td>
+            <td>${objProducts.description}</td>
+            <td>${objProducts.code}</td>
+            <td>${objProducts.price}</td>
+            <td>${objProducts.status}</td>
+            <td>${objProducts.stock}</td>
+            <td>${objProducts.category}</td>
+        </tr>`)
+    rtpTable.innerHTML = productsUpdate
 })

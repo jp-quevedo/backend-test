@@ -41,7 +41,7 @@ chatForm.onsubmit = (e) => {
     }
     socketClient.emit('chatMessage', infoMessage)
 }
-  
+
 socketClient.on('chat', (messages) => {
     const chat = messages
         .map((objMessage) => `<p>${ objMessage.name }: ${ objMessage.message }</p>`)

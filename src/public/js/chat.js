@@ -48,3 +48,5 @@ socketClient.on('chat', (messages) => {
         .join(' ')
     chatDiv.innerHTML = chat
 })
+
+// verificar mensaje vacio, enviar socket subir a bd y devolver chat a cliente, el cliente mapea

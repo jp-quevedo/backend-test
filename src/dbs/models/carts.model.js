@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose'
 
 const cartsSchema = new Schema({
-    title:{
-        type: String,
-        required: true,
+    products:{
+        type: Array,
+        default: [],
     },
 })
 

@@ -1,6 +1,6 @@
 import { cartsModel } from '../../dbs/models/carts.model.js'
-import { productsManager } from './mongo/productsManager.js'
 import BasicManager from './basicManager.js'
+import productsManager from './productsManager.js'
 
 
 class CartsManager extends BasicManager{
@@ -41,4 +41,6 @@ class CartsManager extends BasicManager{
     }
 }
 
-export const cartsManager = new CartsManager()
+const cartsManager = new CartsManager()
+
+export default cartsManager

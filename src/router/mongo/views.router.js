@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import { usersManager } from '../../managers/mongo/usersManager.js'
-import { productsManager } from '../../managers/mongo/productsManager.js'
+import productsManager from '../../managers/mongo/productsManager.js'
+import usersManager from '../../managers/mongo/usersManager.js'
 
 const router = Router()
 

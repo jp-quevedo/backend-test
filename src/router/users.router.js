@@ -1,11 +1,11 @@
 import { Router } from 'express'
-import { usersManager } from '../managers/UserManager.js'
+import userManager from '../managers/UserManager.js'
 
 const router = Router()
 
 router.get('/', async(req, res) => {
     try {
-        const users = await usersManager.getUsers(req.query)
+        const users = await userManager.getUsers(req.query)
         if (!users.length) {
             res.status(200).json({ message: 'Could not find any users' })
         } else {
@@ -19,7 +19,7 @@ router.get('/', async(req, res) => {
 router.get('/:userId', async(req, res) => {
     const { userId } = req.params
     try {
-        const user = await usersManager.getUserById(+userId)
+        const user = await userManager.getUserById(+userId)
         if (!user) {
         res.status(400).json( {message: 'Could not find any user with the id sent' })
         } else {
@@ -36,7 +36,7 @@ router.post('/', async(req, res) => {
         return res.status(400).json({ message: 'Some data is missing' })
     }
     try {
-        const newUser = await usersManager.createUser(req.body)
+        const newUser = await userManager.createUser(req.body)
         req.user = newUser
         res.redirect(`/api/signupresponse/${ newUser.id }`)
     } catch (error) {
@@ -47,7 +47,7 @@ router.post('/', async(req, res) => {
 router.delete('/:userId', async(req, res) => {
     const { userId } = req.params
     try {
-        const response = await usersManager.deleteUser(+userId)
+        const response = await userManager.deleteUser(+userId)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any user with the id sent' })
         } else {
@@ -61,7 +61,7 @@ router.delete('/:userId', async(req, res) => {
 router.put('/:userId', async(req, res) => {
   const { userId } = req.params
   try {
-    const response = await usersManager.updateUser(+userId, req.body)
+    const response = await userManager.updateUser(+userId, req.body)
     if (response === -1) {
       res.status(400).json({ message: 'Could not find any user with the id sent' })
     } else {

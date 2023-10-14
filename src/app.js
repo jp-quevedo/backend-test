@@ -8,7 +8,7 @@ import mongoViewsRouter from './router/mongo/views.router.js'
 import mongoCartsRouter from './router/mongo/carts.router.js'
 import mongoProductsRouter from './router/mongo/products.router.js'
 import mongoUsersRouter from './router/mongo/users.router.js'
-import { productsManager } from './managers/ProductManager.js'
+import productsManager from './managers/ProductManager.js'
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
 import './dbs/config.js'
@@ -72,9 +72,6 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// socket de real time al eliminar saca los titulos
-// se debe habilitar ambas persistencias (atlas y fs)? separo por archivos los routers?
-// models restantes, carts y messages estarán completos?
-// routers restantes, products arroja error de ruteo
 // actualizar chat para enviar mensajes a persistencia db mongo, esto en server al hacer el emit?
+// 
 // en bd ecommerce tener colection products carts messages

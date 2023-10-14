@@ -7,4 +7,6 @@ class ProductsManager extends BasicManager{
     }
 }
 
-export const productsManager = new ProductsManager()
+const productsManager = new ProductsManager()
+
+export default productsManager

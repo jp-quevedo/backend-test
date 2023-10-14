@@ -7,4 +7,6 @@ class UsersManager extends BasicManager{
     }
 }
 
-export const usersManager = new UsersManager()
+const usersManager = new UsersManager()
+
+export default usersManager

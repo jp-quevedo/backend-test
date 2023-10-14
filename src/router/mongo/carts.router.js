@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { cartsManager } from '../../managers/mongo/cartsManager.js'
+import cartsManager from '../../managers/mongo/cartsManager.js'
 
 const router = Router()
 

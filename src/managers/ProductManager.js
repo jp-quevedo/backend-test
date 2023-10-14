@@ -80,4 +80,6 @@ class ProductsManager {
 
 }
 
-export const productsManager = new ProductsManager('./src/dbs/Products.json')
+const productsManager = new ProductsManager('./src/dbs/Products.json')
+
+export default productsManager

@@ -48,10 +48,21 @@ deleteForm.onsubmit = (e) => {
 }
 
 socketClient.on('productDeleted', (newProductsArray) => {
-    rtpTable.innerHTML = ' '
-    const productsUpdate = newProductsArray
+    let products = `<thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Code</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Stock</th>
+            <th>Category</th>
+        </tr>
+    </thead>`
+    newProductsArray
         .map((objProducts) => 
-        `<tr>
+        products += `<tr>
             <td>${objProducts.id}</td>
             <td>${objProducts.title}</td>
             <td>${objProducts.description}</td>
@@ -61,5 +72,5 @@ socketClient.on('productDeleted', (newProductsArray) => {
             <td>${objProducts.stock}</td>
             <td>${objProducts.category}</td>
         </tr>`)
-    rtpTable.innerHTML = productsUpdate
+    rtpTable.innerHTML = products
 })

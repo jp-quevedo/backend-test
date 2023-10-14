@@ -85,4 +85,6 @@ class UsersManager {
     }
 }
 
-export const usersManager = new UsersManager('./src/dbs/Users.json')
+const usersManager = new UsersManager('./src/dbs/Users.json')
+
+export default usersManager

@@ -4,6 +4,10 @@ import viewsRouter from './router/views.router.js'
 import cartsRouter from './router/carts.router.js'
 import productsRouter from './router/products.router.js'
 import usersRouter from './router/users.router.js'
+import mongoViewsRouter from './router/mongo/views.router.js'
+import mongoCartsRouter from './router/mongo/carts.router.js'
+import mongoProductsRouter from './router/mongo/products.router.js'
+import mongoUsersRouter from './router/mongo/users.router.js'
 import { productsManager } from './managers/ProductManager.js'
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
@@ -19,10 +23,15 @@ app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
-app.use('/api', viewsRouter)
+//app.use('/api', viewsRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/users', usersRouter)
+
+app.use('/api', mongoViewsRouter)
+//app.use('/api/carts', mongoCartsRouter)
+//app.use('/api/products', mongoProductsRouter)
+//app.use('/api/users', mongoUsersRouter)
 
 const PORT = 8080
 
@@ -63,4 +72,9 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// se debe habilitar ambas persistencias (atlas y fs)? separo por archivos? 
+// socket de real time al eliminar saca los titulos
+// se debe habilitar ambas persistencias (atlas y fs)? separo por archivos los routers?
+// models restantes, carts y messages estarán completos?
+// routers restantes, products arroja error de ruteo
+// actualizar chat para enviar mensajes a persistencia db mongo, esto en server al hacer el emit?
+// en bd ecommerce tener colection products carts messages

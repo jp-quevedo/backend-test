@@ -1,5 +1,4 @@
 const socketClient = io()
-
 const chatForm = document.getElementById('chatForm')
 const inputMessage = document.getElementById('chatMessage')
 const userName = document.getElementById('chatName')
@@ -15,10 +14,10 @@ const { value: email } = Swal.fire({
     }).then((input) => {
         userEmail = input.value,
         userName.innerText = `Chat user: ${ userEmail }`
-        socketClient.emit('newUser', userEmail)
+        socketClient.emit('newChatUser', userEmail)
     })
 
-socketClient.on('newUserBroadcast', (userEmail) => {
+socketClient.on('newChatUserBroadcast', (userEmail) => {
     Toastify({
         text: `${ userEmail } connected`,
         duration: 5000,

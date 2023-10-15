@@ -52,8 +52,8 @@ socketServer.on('connection', (socket) => {
         console.log(`Client disconnected with id ${ socket.id }`)
     })
 
-    socket.on('newUser', (userEmail) => {
-        socket.broadcast.emit('newUserBroadcast', userEmail)
+    socket.on('newChatUser', (userEmail) => {
+        socket.broadcast.emit('newChatUserBroadcast', userEmail)
     })
 
     socket.on('chatMessage', async(info) => {

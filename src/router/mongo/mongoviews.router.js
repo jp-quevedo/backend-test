@@ -1,6 +1,6 @@
 import { Router } from 'express'
-import productsManager from '../../managers/mongo/productsManager.js'
-import usersManager from '../../managers/mongo/usersManager.js'
+import productsManager from '../../managers/mongo/mongoProductsManager.js'
+import usersManager from '../../managers/mongo/mongoUsersManager.js'
 
 const router = Router()
 
@@ -17,10 +17,6 @@ router.get('/signupresponse/:userId', async(req, res) => {
 router.get('/allusers', async(req, res) => {
     const users = await usersManager.findAll()
     res.render('allusers', { users })
-})
-
-router.get('/chat', (req, res) => {
-    res.render('chat')
 })
 
 router.get('/home', async(req, res) => {

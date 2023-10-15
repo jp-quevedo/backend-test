@@ -7,21 +7,16 @@ const chatDiv = document.getElementById('chat')
 
 let user
 
-Swal.fire({
-    title: 'Welcome!',
-    text: 'What should we call you?',
-    input: 'text',
-    inputValidator: (value) => {
-        if (!value) {
-        return 'But we need a name!'
-        }
-    },
-    confirmButtonText: 'Enter',
+const { value: email } = Swal.fire({
+    title: 'Input email address',
+    input: 'email',
+    inputLabel: 'Your email address',
+    inputPlaceholder: 'Enter your email address'
     }).then((input) => {
-    user = input.value,
-    userName.innerText = `Chat user: ${ user }`
-    socketClient.emit('newUser', user)
-})
+        userEmail = input.value,
+        userName.innerText = `Chat user: ${ userEmail }`
+        socketClient.emit('newUser', userEmail)
+    })
 
 socketClient.on('newUserBroadcast', (user) => {
     Toastify({
@@ -36,15 +31,15 @@ socketClient.on('newUserBroadcast', (user) => {
 chatForm.onsubmit = (e) => {
     e.preventDefault()
     const infoMessage = {
-        name: user,
+        userEmail: userEmail,
         message: inputMessage.value
     }
     socketClient.emit('chatMessage', infoMessage)
 }
 
-socketClient.on('chat', (messages) => {
-    const chat = messages
-        .map((objMessage) => `<p>${ objMessage.name }: ${ objMessage.message }</p>`)
+socketClient.on('chat', (newMessage) => {
+    const chat = newMessage
+        .map((objMessage) => `<p>${ objMessage.userEmail }: ${ objMessage.message }</p>`)
         .join(' ')
     chatDiv.innerHTML = chat
 })

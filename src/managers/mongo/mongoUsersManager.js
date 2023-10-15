@@ -1,5 +1,5 @@
 import { usersModel } from '../../dbs/models/users.model.js'
-import BasicManager from './basicManager.js'
+import BasicManager from './mongoBasicManager.js'
 
 class UsersManager extends BasicManager{
     constructor(){

@@ -1,6 +1,6 @@
 import { cartsModel } from '../../dbs/models/carts.model.js'
-import BasicManager from './basicManager.js'
-import productsManager from './productsManager.js'
+import BasicManager from './mongoBasicManager.js'
+import productsManager from './mongoProductsManager.js'
 
 
 class CartsManager extends BasicManager{

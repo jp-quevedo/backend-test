@@ -1,5 +1,5 @@
 import { messagesModel } from '../../dbs/models/messages.model.js'
-import BasicManager from './basicManager.js'
+import BasicManager from './mongoBasicManager.js'
 
 class MessagesManager extends BasicManager{
     constructor(){
@@ -7,4 +7,6 @@ class MessagesManager extends BasicManager{
     }
 }
 
-export const messagesManager = new MessagesManager()
+const messagesManager = new MessagesManager()
+
+export default messagesManager

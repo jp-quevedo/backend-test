@@ -5,7 +5,7 @@ const inputMessage = document.getElementById('chatMessage')
 const userName = document.getElementById('chatName')
 const chatDiv = document.getElementById('chat')
 
-let user
+let userEmail
 
 const { value: email } = Swal.fire({
     title: 'Input email address',
@@ -18,9 +18,9 @@ const { value: email } = Swal.fire({
         socketClient.emit('newUser', userEmail)
     })
 
-socketClient.on('newUserBroadcast', (user) => {
+socketClient.on('newUserBroadcast', (userEmail) => {
     Toastify({
-        text: `${ user } connected`,
+        text: `${ userEmail } connected`,
         duration: 5000,
         style: {
             background: 'linear-gradient(to right, #00b09b, #96c93d)'
@@ -34,14 +34,19 @@ chatForm.onsubmit = (e) => {
         userEmail: userEmail,
         message: inputMessage.value
     }
-    socketClient.emit('chatMessage', infoMessage)
+    if (!inputMessage.value) {
+        return alert('Say something!')
+    } else {
+        socketClient.emit('chatMessage', infoMessage)
+    }
 }
 
 socketClient.on('chat', (newMessage) => {
-    const chat = newMessage
-        .map((objMessage) => `<p>${ objMessage.userEmail }: ${ objMessage.message }</p>`)
-        .join(' ')
-    chatDiv.innerHTML = chat
+    const { userEmail, message } = newMessage
+    const chatRow = 
+        `
+        <td>${userEmail}</td>
+        <td>${message}</td>
+        `
+    chatDiv.innerHTML += chatRow
 })
-
-// verificar mensaje vacio, enviar socket subir a bd y devolver chat a cliente, el cliente mapea

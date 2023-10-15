@@ -44,8 +44,6 @@ const httpServer = app.listen(PORT, () => {
 
 const socketServer = new Server(httpServer)
 
-const messages = []
-
 socketServer.on('connection', (socket) => {
 
     console.log(`Client connected with id ${ socket.id }`)
@@ -59,7 +57,6 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('chatMessage', async(info) => {
-        messages.push(info)
         const newMessage = await messagesManager.createOne(info)
         socketServer.emit('chat', newMessage)
     })
@@ -75,7 +72,3 @@ socketServer.on('connection', (socket) => {
     })
 
 })
-
-// actualizar chat para enviar mensajes a persistencia db mongo, esto en server al hacer el emit?
-// 
-// en bd ecommerce tener colection products carts messages

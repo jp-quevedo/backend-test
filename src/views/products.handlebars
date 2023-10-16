@@ -1,6 +1,6 @@
 <div>
     <h2>Create Product</h2>
-    <form id='addForm'>
+    <form id='createForm'>
         Title: <input type='text' name='productTitle' id='productTitle'>
         Description: <input type='text' name='productDescription' id='productDescription'>
         Code: <input type='text' name='productCode' id='productCode'>
@@ -20,35 +20,37 @@
     </form>
 </div>
 
-<h2>Products Available</h2>
-<table id='rtpTable'>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Code</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Stock</th>
-            <th>Category</th>
-        </tr>
-    </thead>
-    <tbody id='rtpTableBody'>
-        {{#each products}}
-        <tr>
-            <td>{{_id}}</td>
-            <td>{{title}}</td>
-            <td>{{description}}</td>
-            <td>{{code}}</td>
-            <td>{{price}}</td>
-            <td>{{status}}</td>
-            <td>{{stock}}</td>
-            <td>{{category}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div>
+    <h2>Products Available</h2>
+    <table id='rtpTable'>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Stock</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each products}}
+            <tr>
+                <td>{{_id}}</td>
+                <td>{{title}}</td>
+                <td>{{description}}</td>
+                <td>{{code}}</td>
+                <td>{{price}}</td>
+                <td>{{status}}</td>
+                <td>{{stock}}</td>
+                <td>{{category}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
 
 <script src='/socket.io/socket.io.js'></script>
 <script src='/js/products.js'></script>

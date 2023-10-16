@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose'
 
 const cartsSchema = new Schema({
-    products:{
+    productsInCart:{
         type: Array,
         default: [],
     },

@@ -4,16 +4,8 @@ import cartsManager from '../../managers/mongo/mongoCartsManager.js'
 const router = Router()
 
 router.get('/', async(req, res) => {
-    try {
-        const carts = await cartsManager.findAll(req.query)
-        if (!carts.length) {
-            res.status(200).json({ message: 'Could not find any carts' })
-        } else {
-            res.status(200).json({ message: 'Carts found', carts })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
+    const carts = await cartsManager.findAll()
+    res.render('carts', { carts })
 })
 
 router.get('/:_id', async(req, res) => {

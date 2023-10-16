@@ -1,0 +1,47 @@
+<div>
+    <h2>Create Cart</h2>
+    <form id='createForm'>
+        Products In Cart: <input type='string' name='productsInCart' id='productsInCart'>
+        <input type='submit' value='Create'>
+    </form>
+</div>
+
+<div>
+    <h2>Add Products to Cart</h2>
+    <form id='addProductsForm'>
+        Cart Id: <input type='string' name='cartId' id='cartId'>
+        Product Id: <input type='string' name='productId' id='productId'>
+        <input type='submit' value='Delete'>
+    </form>
+</div>
+
+<div>
+    <h2>Delete Cart</h2>
+    <form id='deleteForm'>
+        Id: <input type='string' name='cartId' id='cartId'>
+        <input type='submit' value='Delete'>
+    </form>
+</div>
+
+<div>
+    <h2>Carts Available</h2>
+    <table id='cartTable'>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Products</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each carts}}
+            <tr>
+                <td>{{_id}}</td>
+                <td>{{products}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+
+<script src='/socket.io/socket.io.js'></script>
+<script src='/js/carts.js'></script>

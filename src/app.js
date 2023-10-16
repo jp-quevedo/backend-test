@@ -9,8 +9,10 @@ import mongoCartsRouter from './router/mongo/mongocarts.router.js'
 import mongoChatRouter from './router/mongo/mongochat.router.js'
 import mongoProductsRouter from './router/mongo/mongoproducts.router.js'
 import mongoUsersRouter from './router/mongo/mongousers.router.js'
-import productsManager from './managers/mongo/mongoProductsManager.js'
 import messagesManager from './managers/mongo/mongoMessagesManager.js'
+import productsManager from './managers/mongo/mongoProductsManager.js'
+import usersManager from './managers/mongo/mongoUsersManager.js'
+import cartsManager from './managers/mongo/mongoCartsManager.js'
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
 import './dbs/config.js'
@@ -61,15 +63,25 @@ socketServer.on('connection', (socket) => {
         socketServer.emit('chat', newMessage)
     })
 
-    socket.on('createProduct', async(product) => {
-        const creatingProduct = await productsManager.createOne(product)
+    socket.on('createProduct', async(newProduct) => {
+        const creatingProduct = await productsManager.createOne(newProduct)
         socket.emit('productCreated', creatingProduct)
     })
 
-    socket.on('deleteProduct', async(product) => {
-        const productDeleted = await productsManager.deleteOne(product)
+    socket.on('deleteProduct', async(productId) => {
+        const productDeleted = await productsManager.deleteOne(productId)
         const newProductsArray = await productsManager.findAll()
         socket.emit('productDeleted', newProductsArray)
+    })
+
+    socket.on('createUser', async(newUser) => {
+        const creatingUser = await usersManager.createOne(newUser)
+        socket.emit('userCreated', creatingUser)
+    })
+    
+    socket.on('createCart', async(newCart) => {
+        const creatingCart = await cartsManager.createOne(newCart)
+        socket.emit('cartCreated', creatingCart)
     })
 
 })

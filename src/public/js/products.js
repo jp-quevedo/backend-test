@@ -1,7 +1,6 @@
 const socketClient = io()
-const addForm = document.getElementById('addForm')
+const createForm = document.getElementById('createForm')
 const deleteForm = document.getElementById('deleteForm')
-const updateForm = document.getElementById('updateForm')
 const productId = document.getElementById('productId')
 const productTitle = document.getElementById('productTitle')
 const productDescription = document.getElementById('productDescription')
@@ -12,9 +11,9 @@ const productStock = document.getElementById('productStock')
 const productCategory = document.getElementById('productCategory')
 const rtpTable = document.getElementById('rtpTable')
 
-addForm.onsubmit = (e) => {
+createForm.onsubmit = (e) => {
     e.preventDefault()
-    const product = {
+    const newProduct = {
         title: productTitle.value,
         description: productDescription.value,
         code: productCode.value,
@@ -23,11 +22,11 @@ addForm.onsubmit = (e) => {
         stock: productStock.value,
         category: productCategory.value,
     }
-    socketClient.emit('createProduct', product)
+    socketClient.emit('createProduct', newProduct)
 }
 
-socketClient.on('productCreated', (product) => {
-    const { _id, title, description, code, price, status, stock, category } = product
+socketClient.on('productCreated', (creatingProduct) => {
+    const { _id, title, description, code, price, status, stock, category } = creatingProduct
     const productRow = `
         <tr>
             <td>${_id}</td>
@@ -45,7 +44,7 @@ socketClient.on('productCreated', (product) => {
 
 deleteForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('deleteProduct', +productId.value)
+    socketClient.emit('deleteProduct', { _id: productId.value })
 }
 
 socketClient.on('productDeleted', (newProductsArray) => {

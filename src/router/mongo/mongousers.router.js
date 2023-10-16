@@ -7,21 +7,15 @@ router.get('/signup', (req, res) => {
     res.render('signup')
 })
 
-router.get('/signupresponse/:_id', async(req, res) => {
-    const { _id: id } = req.params
-    const user = await usersManager.findById(id)
-    res.render('signupresponse', { user })
-})
-
 router.get('/', async(req, res) => {
     const users = await usersManager.findAll()
     res.render('users', { users })
 })
 
-router.get('/:userId', async(req, res) => {
-    const { userId } = req.params
+router.get('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const user = await usersManager.findById(+userId)
+        const user = await usersManager.findById(id)
         if (!user) {
         res.status(400).json( {message: 'Could not find any user with the id sent' })
         } else {
@@ -40,16 +34,16 @@ router.post('/', async(req, res) => {
     try {
         const newUser = await usersManager.createOne(req.body)
         req.user = newUser
-        res.redirect(`/api/signupresponse/${ newUser.id }`)
+        res.redirect('/api/users')
     } catch (error) {
         res.status(500).json({ message: error })
 }
 });
 
-router.delete('/:userId', async(req, res) => {
-    const { userId } = req.params
+router.delete('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const response = await usersManager.deleteOne(+userId)
+        const response = await usersManager.deleteOne(id)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any user with the id sent' })
         } else {
@@ -60,10 +54,10 @@ router.delete('/:userId', async(req, res) => {
 }
 });
 
-router.put('/:userId', async(req, res) => {
-  const { userId } = req.params
-  try {
-    const response = await usersManager.updateOne(+userId, req.body)
+router.put('/:_id', async(req, res) => {
+    const { _id: id } = req.params
+    try {
+    const response = await usersManager.updateOne(id, req.body)
     if (response === -1) {
       res.status(400).json({ message: 'Could not find any user with the id sent' })
     } else {

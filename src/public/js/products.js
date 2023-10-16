@@ -1,6 +1,7 @@
 const socketClient = io()
 const addForm = document.getElementById('addForm')
 const deleteForm = document.getElementById('deleteForm')
+const updateForm = document.getElementById('updateForm')
 const productId = document.getElementById('productId')
 const productTitle = document.getElementById('productTitle')
 const productDescription = document.getElementById('productDescription')
@@ -26,10 +27,10 @@ addForm.onsubmit = (e) => {
 }
 
 socketClient.on('productCreated', (product) => {
-    const { id, title, description, code, price, status, stock, category } = product
+    const { _id, title, description, code, price, status, stock, category } = product
     const productRow = `
         <tr>
-            <td>${id}</td>
+            <td>${_id}</td>
             <td>${title}</td>
             <td>${description}</td>
             <td>${code}</td>
@@ -63,7 +64,7 @@ socketClient.on('productDeleted', (newProductsArray) => {
     newProductsArray
         .map((objProducts) => 
         products += `<tr>
-            <td>${objProducts.id}</td>
+            <td>${objProducts._id}</td>
             <td>${objProducts.title}</td>
             <td>${objProducts.description}</td>
             <td>${objProducts.code}</td>

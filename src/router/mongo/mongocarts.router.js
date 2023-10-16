@@ -16,10 +16,10 @@ router.get('/', async(req, res) => {
     }
 })
 
-router.get('/:cartId', async(req, res) => {
-    const { cartId } = req.params
+router.get('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const cart = await cartsManager.findById(+cartId)
+        const cart = await cartsManager.findById(id)
         if (!cart) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
@@ -39,21 +39,21 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.post('/:cartId/products/:productId', async(req, res) => {
-        const { cartId } = req.params
-        const { productId } = req.params
+router.post('/:_id/products/:obj', async(req, res) => {
+        const { _id: id } = req.params
+        const { obj } = req.params
     try {
-        await cartsManager.addProductToCart(cartId, productId)
+        await cartsManager.addProductToCart(id, obj)
     } catch (error) {
         res.status(500).json({ message: error })
     }
 })
 
-router.delete('/:cartId', async(req, res) => {
-    const { cartId } = req.params
+router.delete('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const response = await cartsManager.deleteOne(+cartId, req.body)
-        if (response === -1) {
+        const response = await cartsManager.deleteOne(id)
+        if (!response) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
             res.status(200).json({ message: 'Cart deleted' })
@@ -63,10 +63,10 @@ router.delete('/:cartId', async(req, res) => {
     }
 })
 
-router.put('/:cartId', async(req, res) => {
-    const { cartId } = req.params
+router.put('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const response = await cartsManager.updateOne(+cartId, req.body)
+        const response = await cartsManager.updateOne(id, req.body)
         if (!response) {
             res.status(200).json({ message: 'Cart updated' })
         } else {

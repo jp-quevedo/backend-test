@@ -56,8 +56,8 @@ socketServer.on('connection', (socket) => {
         socket.broadcast.emit('newChatUserBroadcast', userEmail)
     })
 
-    socket.on('chatMessage', async(info) => {
-        const newMessage = await messagesManager.createOne(info)
+    socket.on('chatMessage', async(infoMessage) => {
+        const newMessage = await messagesManager.createOne(infoMessage)
         socketServer.emit('chat', newMessage)
     })
 
@@ -65,9 +65,10 @@ socketServer.on('connection', (socket) => {
         const creatingProduct = await productsManager.createOne(product)
         socket.emit('productCreated', creatingProduct)
     })
-    
+
     socket.on('deleteProduct', async(product) => {
-        const newProductsArray = await productsManager.deleteOne(product)
+        const productDeleted = await productsManager.deleteOne(product)
+        const newProductsArray = await productsManager.findAll()
         socket.emit('productDeleted', newProductsArray)
     })
 

@@ -3,18 +3,20 @@ import usersManager from '../../managers/mongo/mongoUsersManager.js'
 
 const router = Router()
 
+router.get('/signup', (req, res) => {
+    res.render('signup')
+})
+
+router.get('/signupresponse/:_id', async(req, res) => {
+    const { _id: id } = req.params
+    const user = await usersManager.findById(id)
+    res.render('signupresponse', { user })
+})
+
 router.get('/', async(req, res) => {
-    try {
-        const users = await usersManager.findAll(req.query)
-        if (!users.length) {
-            res.status(200).json({ message: 'Could not find any users' })
-        } else {
-            res.status(200).json( {message: 'Users found', users })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
-});
+    const users = await usersManager.findAll()
+    res.render('users', { users })
+})
 
 router.get('/:userId', async(req, res) => {
     const { userId } = req.params

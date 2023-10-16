@@ -5,22 +5,14 @@ import { upload } from '../../middlewares/multer.middleware.js'
 const router = Router()
 
 router.get('/', async(req, res) => {
-    try {
-        const products = await productsManager.findAll(req.query)
-        if (!products.length) {
-            res.status(200).json({ message: 'Could not find any products' })
-        } else {
-            res.status(200).json({ message: 'Products found', products })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
+    const products = await productsManager.findAll()
+    res.render('products', { products })
 })
 
-router.get('/:productId', async(req, res) => {
-    const { productId } = req.params
+router.get('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const product = await productsManager.findById(+productId)
+        const product = await productsManager.findById(id)
         if (!product) {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
         } else {
@@ -44,10 +36,10 @@ router.post('/', upload.single('productimage.jpeg'), async(req, res) => {
     }
 })
 
-router.delete('/:productId', async(req, res) => {
-    const { productId } = req.params
+router.delete('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const response = await productsManager.deleteOne(+productId, req.body)
+        const response = await productsManager.deleteOne(id, req.body)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
         } else {
@@ -58,10 +50,10 @@ router.delete('/:productId', async(req, res) => {
     }
 })
 
-router.put('/:productId', async(req, res) => {
-    const { productId } = req.params
+router.put('/:_id', async(req, res) => {
+    const { _id: id } = req.params
     try {
-        const response = await productsManager.updateOne(+productId, req.body)
+        const response = await productsManager.updateOne(id, req.body)
         if (!response) {
             res.status(200).json({ message: 'Product updated' })
         } else {

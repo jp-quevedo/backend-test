@@ -1,0 +1,19 @@
+<h2>Users available</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr>
+            <td>{{_id}}</td>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>

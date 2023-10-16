@@ -1,3 +1,4 @@
+<h2>Products</h2>
 <table>
     <thead>
         <tr>
@@ -11,10 +12,10 @@
             <th>Category</th>
         </tr>
     </thead>
-    <tbody id='rtpTableBody'>
+    <tbody>
         {{#each products}}
         <tr>
-            <td>{{id}}</td>
+            <td>{{_id}}</td>
             <td>{{title}}</td>
             <td>{{description}}</td>
             <td>{{code}}</td>
@@ -22,6 +23,44 @@
             <td>{{status}}</td>
             <td>{{stock}}</td>
             <td>{{category}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Carts</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Products</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each carts}}
+        <tr>
+            <td>{{_id}}</td>
+            <td>{{products}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Users</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each users}}
+        <tr>
+            <td>{{_id}}</td>
+            <td>{{name}}</td>
+            <td>{{email}}</td>
         </tr>
         {{/each}}
     </tbody>

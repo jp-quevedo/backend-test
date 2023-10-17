@@ -33,16 +33,6 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.post('/:_id/products/:obj', async(req, res) => {
-        const { _id: id } = req.params
-        const { obj } = req.params
-    try {
-        await cartsManager.addProductToCart(id, obj)
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
-})
-
 router.delete('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
@@ -59,12 +49,14 @@ router.delete('/:_id', async(req, res) => {
 
 router.put('/:_id', async(req, res) => {
     const { _id: id } = req.params
+    const { productsInCart: [productsInAddP] } = req.body
     try {
-        const response = await cartsManager.updateOne(id, req.body)
+        const response = await cartsManager.updateOne(id, productsInAddP)
         if (!response) {
-            res.status(200).json({ message: 'Cart updated' })
-        } else {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
+        } else {
+            console.log(response)
+            res.status(200).json({ message: 'Cart updated' })
         }
     } catch (error) {
         res.status(500).json({ message: error })

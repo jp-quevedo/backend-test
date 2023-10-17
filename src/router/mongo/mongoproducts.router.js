@@ -54,7 +54,7 @@ router.put('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await productsManager.updateOne(id, req.body)
-        if (!response) {
+        if (response === -1) {
             res.status(200).json({ message: 'Product updated' })
         } else {
             res.status(400).json({ message: 'Could not find any product with the id sent' })

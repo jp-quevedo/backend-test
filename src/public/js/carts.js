@@ -5,7 +5,7 @@ const updateCartForm = document.getElementById('updateCartForm')
 const updatingCartId = document.getElementById('updatingCartId')
 const cartId = document.getElementById('cartId')
 const deletingCartId = document.getElementById('deletingCartId')
-const productsInCart = document.getElementById('productsInCart')
+const productsInAddP = document.getElementById('productsInAddP')
 const cTable = document.getElementById('cTable')
 
 createCartForm.onsubmit = (e) => {
@@ -26,7 +26,7 @@ socketClient.on('cartCreated', (creatingCart) => {
 
 updateCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('updateCart', { _id: id, productsInCart })
+    socketClient.emit('updateCart', { _id: updatingCartId.value }, productsInAddP.value)
 }
 
 socketClient.on('cartUpdated', (newCartsArray) => {

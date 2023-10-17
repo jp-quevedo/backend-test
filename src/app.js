@@ -48,6 +48,8 @@ const socketServer = new Server(httpServer)
 
 socketServer.on('connection', (socket) => {
 
+    // CHAT
+
     console.log(`Client connected with id ${ socket.id }`)
 
     socket.on('disconnect', () => {
@@ -63,6 +65,8 @@ socketServer.on('connection', (socket) => {
         socketServer.emit('chat', newMessage)
     })
 
+    // PRODUCTS
+
     socket.on('createProduct', async(newProduct) => {
         const creatingProduct = await productsManager.createOne(newProduct)
         socket.emit('productCreated', creatingProduct)
@@ -75,6 +79,8 @@ socketServer.on('connection', (socket) => {
         socket.emit('productDeleted', newProductsArray)
     })
 
+    // USERS
+
     socket.on('createUser', async(newUser) => {
         const creatingUser = await usersManager.createOne(newUser)
         socket.emit('userCreated', creatingUser)
@@ -86,24 +92,52 @@ socketServer.on('connection', (socket) => {
         const newUsersArray = await usersManager.findAll()
         socket.emit('userDeleted', newUsersArray)
     })
+
+    // CARTS
     
     socket.on('createCart', async(cartId) => {
         const creatingCart = await cartsManager.createOne(cartId)
         socket.emit('cartCreated', creatingCart)
     })
 
-    socket.on('updateCart', async({ _id: id, productsInCart }) => {
-        const updatingCart = await cartsManager.updateOne({ _id: id, productsInCart })
-        console.log(updatingCart)
-        const newCartsArray = await cartsManager.findAll()
-        socket.emit('cartUpdated', newCartsArray)
-    })
+    socket.on('updateCart', async (updatingCartId, productsInAddP) => {
 
+        const findUpdatingCart = await cartsManager.findById(updatingCartId)
+        console.log(findUpdatingCart)
+
+        if (findUpdatingCart) {
+            const { productsInCart } = findUpdatingCart
+            productsInCart.push(productsInAddP)
+        }
+        console.log(findUpdatingCart)
+
+        const cartUpdated = await cartsManager.updateOne(updatingCartId, productsInAddP)
+        console.log(cartUpdated)
+
+        const newCartsArray = await cartsManager.findAll()
+        //console.log(newCartsArray)
+
+        socket.emit('cartUpdated', newCartsArray)
+    })    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
     socket.on('deleteCart', async(deletingCartId) => {
         const deletingCart = await cartsManager.deleteOne(deletingCartId)
         console.log(deletingCart)
         const newCartsArray = await cartsManager.findAll()
         socket.emit('cartDeleted', newCartsArray)
     })
-
 })

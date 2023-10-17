@@ -23,4 +23,12 @@ export default class BasicManager {
     async deleteOne(id){
         return this.model.deleteOne(id)
     }
+
+    async replaceOne(id, obj){
+        return this.model.replaceOne({ _id: id }, { obj })
+    }
+    
+    async findOneAndUpdate(id, obj){
+        return this.model.findOneAndUpdate({ _id: id }, { obj })
+    }
 }

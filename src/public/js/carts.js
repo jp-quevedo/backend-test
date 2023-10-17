@@ -1,18 +1,15 @@
 const socketClient = io()
-const createForm = document.getElementById('createForm')
-const addProductsForm = document.getElementById('addProductsForm')
-const deleteForm = document.getElementById('deleteForm')
+const createCartForm = document.getElementById('createCartForm')
+const deleteCartForm = document.getElementById('deleteCartForm')
 const cartId = document.getElementById('cartId')
+const deletingCartId = document.getElementById('deletingCartId')
 const productsInCart = document.getElementById('productsInCart')
 const productId = document.getElementById('productId')
-const cartTable = document.getElementById('rtpTable')
+const cTable = document.getElementById('cTable')
 
-createForm.onsubmit = (e) => {
+createCartForm.onsubmit = (e) => {
     e.preventDefault()
-    const newCart = {
-        productsInCart: productsInCart.value
-    }
-    socketClient.emit('createCart', newCart)
+    socketClient.emit('createCart', { cartId })
 }
 
 socketClient.on('cartCreated', (creatingCart) => {
@@ -23,38 +20,26 @@ socketClient.on('cartCreated', (creatingCart) => {
             <td>${productsInCart}</td>
         </tr>
     `
-    cartTable.innerHTML += cartRow
+    cTable.innerHTML += cartRow
 })
 
-deleteForm.onsubmit = (e) => {
+deleteCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('deleteProduct', { _id: productId.value })
+    socketClient.emit('deleteCart', { _id: deletingCartId.value })
 }
 
-socketClient.on('productDeleted', (newProductsArray) => {
-    let products = `<thead>
+socketClient.on('cartDeleted', (newCartsArray) => {
+    let carts = `<thead>
         <tr>
             <th>Id</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Code</th>
-            <th>Price</th>
-            <th>Status</th>
-            <th>Stock</th>
-            <th>Category</th>
+            <th>Products</th>
         </tr>
     </thead>`
-    newProductsArray
-        .map((objProducts) => 
-        products += `<tr>
-            <td>${objProducts._id}</td>
-            <td>${objProducts.title}</td>
-            <td>${objProducts.description}</td>
-            <td>${objProducts.code}</td>
-            <td>${objProducts.price}</td>
-            <td>${objProducts.status}</td>
-            <td>${objProducts.stock}</td>
-            <td>${objProducts.category}</td>
+    newCartsArray
+        .map((objCarts) => 
+        carts += `<tr>
+            <td>${objCarts._id}</td>
+            <td>${objCarts.productsInCart}</td>
         </tr>`)
-    rtpTable.innerHTML = products
+    cTable.innerHTML = carts
 })

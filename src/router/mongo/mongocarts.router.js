@@ -44,8 +44,8 @@ router.post('/:_id/products/:obj', async(req, res) => {
 router.delete('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await cartsManager.deleteOne(id)
-        if (!response) {
+        const response = await cartsManager.deleteOne(id, req.body)
+        if (response === -1) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
             res.status(200).json({ message: 'Cart deleted' })

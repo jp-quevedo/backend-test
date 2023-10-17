@@ -58,9 +58,8 @@ router.put('/:_id', async(req, res) => {
             res.status(200).json({ message: 'Product updated' })
         } else {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
-
         }
-    }catch (error) {
+    } catch (error) {
         res.status(500).json({ message: error })
     }
 })

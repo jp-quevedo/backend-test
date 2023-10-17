@@ -1,15 +1,23 @@
 <div>
-    <h2>Sign Up</h2>
-    <form id='signUpForm' method='post'>
+    <h2>Create User</h2>
+    <form id='createUserForm' method='post'>
         Name <input type='text' name='name' id='userName'>
         Email <input type='email' name='email' id='userEmail'>
         Password <input type='password' name='password' id='userPassword'>
-        <input type='submit' value='Sign Up'>
+        <input type='submit' value='Create'>
     </form>
 </div>
 
 <div>
-    <h2>Users available</h2>
+    <h2>Delete User</h2>
+    <form id='deleteUserForm'>
+        Id: <input type='string' name='deletingUserId' id='deletingUserId'>
+        <input type='submit' value='Delete'>
+    </form>
+</div>
+
+<div>
+    <h2>Users Available</h2>
     <table id='uTable'>
         <thead>
             <tr>

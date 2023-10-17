@@ -1,28 +1,29 @@
-<h2>Handlebars and Socket Chat</h2>
+<div>
+    <h2 id='chatName'></h2>
+    <form id='chatForm'>
+        <input type='text' name='chatMessage' id='chatMessage'>
+        <input type='submit' value='Send'>
+    </form>
+</div>
 
-<h3 id='chatName'></h3>
-
-<form id='chatForm'>
-    <input type='text' name='chatMessage' id='chatMessage'>
-    <input type='submit' value='Send'>
-</form>
-
-<table id='chat'>
-    <thead>
-        <tr>
-            <th>User</th>
-            <th>Message</th>
-        </tr>
-    </thead>
-    <tbody >
-        {{#each messages}}
-        <tr>
-            <td>{{userEmail}}</td>
-            <td>{{message}}</td>
-        </tr>
-        {{/each}}
-    </tbody>
-</table>
+<div>
+    <table id='chat'>
+        <thead>
+            <tr>
+                <th>User</th>
+                <th>Message</th>
+            </tr>
+        </thead>
+        <tbody >
+            {{#each messages}}
+            <tr>
+                <td>{{userEmail}}</td>
+                <td>{{message}}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>

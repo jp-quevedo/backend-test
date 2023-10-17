@@ -69,7 +69,8 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('deleteProduct', async(productId) => {
-        const productDeleted = await productsManager.deleteOne(productId)
+        const deletingProduct = await productsManager.deleteOne(productId)
+        console.log(deletingProduct)
         const newProductsArray = await productsManager.findAll()
         socket.emit('productDeleted', newProductsArray)
     })
@@ -78,10 +79,24 @@ socketServer.on('connection', (socket) => {
         const creatingUser = await usersManager.createOne(newUser)
         socket.emit('userCreated', creatingUser)
     })
+
+    socket.on('deleteUser', async(deletingUserId) => {
+        const deletingUser = await usersManager.deleteOne(deletingUserId)
+        console.log(deletingUser)
+        const newUsersArray = await usersManager.findAll()
+        socket.emit('userDeleted', newUsersArray)
+    })
     
-    socket.on('createCart', async(newCart) => {
-        const creatingCart = await cartsManager.createOne(newCart)
+    socket.on('createCart', async(cartId) => {
+        const creatingCart = await cartsManager.createOne(cartId)
         socket.emit('cartCreated', creatingCart)
+    })
+
+    socket.on('deleteCart', async(deletingCartId) => {
+        const deletingCart = await cartsManager.deleteOne(deletingCartId)
+        console.log(deletingCart)
+        const newCartsArray = await cartsManager.findAll()
+        socket.emit('cartDeleted', newCartsArray)
     })
 
 })

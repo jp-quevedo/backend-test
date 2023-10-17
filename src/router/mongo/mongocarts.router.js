@@ -1,11 +1,13 @@
 import { Router } from 'express'
 import cartsManager from '../../managers/mongo/mongoCartsManager.js'
+import productsManager from '../../managers/mongo/mongoProductsManager.js'
 
 const router = Router()
 
 router.get('/', async(req, res) => {
     const carts = await cartsManager.findAll()
-    res.render('carts', { carts })
+    const products = await productsManager.findAll()
+    res.render('carts', { carts, products })
 })
 
 router.get('/:_id', async(req, res) => {

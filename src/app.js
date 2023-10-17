@@ -92,6 +92,13 @@ socketServer.on('connection', (socket) => {
         socket.emit('cartCreated', creatingCart)
     })
 
+    socket.on('updateCart', async({ _id: id, productsInCart }) => {
+        const updatingCart = await cartsManager.updateOne({ _id: id, productsInCart })
+        console.log(updatingCart)
+        const newCartsArray = await cartsManager.findAll()
+        socket.emit('cartUpdated', newCartsArray)
+    })
+
     socket.on('deleteCart', async(deletingCartId) => {
         const deletingCart = await cartsManager.deleteOne(deletingCartId)
         console.log(deletingCart)

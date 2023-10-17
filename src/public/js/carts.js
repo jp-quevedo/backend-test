@@ -1,10 +1,11 @@
 const socketClient = io()
 const createCartForm = document.getElementById('createCartForm')
 const deleteCartForm = document.getElementById('deleteCartForm')
+const updateCartForm = document.getElementById('updateCartForm')
+const updatingCartId = document.getElementById('updatingCartId')
 const cartId = document.getElementById('cartId')
 const deletingCartId = document.getElementById('deletingCartId')
 const productsInCart = document.getElementById('productsInCart')
-const productId = document.getElementById('productId')
 const cTable = document.getElementById('cTable')
 
 createCartForm.onsubmit = (e) => {
@@ -21,6 +22,27 @@ socketClient.on('cartCreated', (creatingCart) => {
         </tr>
     `
     cTable.innerHTML += cartRow
+})
+
+updateCartForm.onsubmit = (e) => {
+    e.preventDefault()
+    socketClient.emit('updateCart', { _id: id, productsInCart })
+}
+
+socketClient.on('cartUpdated', (newCartsArray) => {
+    let carts = `<thead>
+        <tr>
+            <th>Cart Id</th>
+            <th>Products Id</th>
+        </tr>
+    </thead>`
+    newCartsArray
+        .map((objCarts) => 
+        carts += `<tr>
+            <td>${objCarts._id}</td>
+            <td>${objCarts.productsInCart}</td>
+        </tr>`)
+    cTable.innerHTML = carts
 })
 
 deleteCartForm.onsubmit = (e) => {

@@ -7,10 +7,10 @@
 
 <div>
     <h2>Add Products to Cart</h2>
-    <form id='addProductsForm'>
-        Cart Id: <input type='string' name='cartId' id='cartId'>
-        Product Id: <input type='string' name='productsInCart' id='productsInCart'>
-        <input type='submit' value='Delete'>
+    <form id='updateCartForm'>
+        Cart Id: <input type='string' name='updatingCartId' id='updatingCartId'>
+        Product Id: {"productsInCart":["productId"]}...<input type='string' name='productsInCart' id='productsInCart'>
+        <input type='submit' value='Add'>
     </form>
 </div>
 
@@ -27,15 +27,15 @@
     <table id='cTable'>
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Products</th>
+                <th>Cart Id</th>
+                <th>Products Id</th>
             </tr>
         </thead>
         <tbody>
             {{#each carts}}
             <tr>
                 <td>{{_id}}</td>
-                <td>{{products}}</td>
+                <td>{{productsInCart}}</td>
             </tr>
             {{/each}}
         </tbody>
@@ -47,13 +47,27 @@
     <table id='rtpTable'>
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Products Id</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Stock</th>
+                <th>Category</th>
             </tr>
         </thead>
         <tbody>
             {{#each products}}
             <tr>
                 <td>{{_id}}</td>
+                <td>{{title}}</td>
+                <td>{{description}}</td>
+                <td>{{code}}</td>
+                <td>{{price}}</td>
+                <td>{{status}}</td>
+                <td>{{stock}}</td>
+                <td>{{category}}</td>
             </tr>
             {{/each}}
         </tbody>

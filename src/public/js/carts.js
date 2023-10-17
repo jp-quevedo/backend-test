@@ -53,8 +53,8 @@ deleteCartForm.onsubmit = (e) => {
 socketClient.on('cartDeleted', (newCartsArray) => {
     let carts = `<thead>
         <tr>
-            <th>Id</th>
-            <th>Products</th>
+            <th>Cart Id</th>
+            <th>Products Id</th>
         </tr>
     </thead>`
     newCartsArray

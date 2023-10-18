@@ -48,10 +48,12 @@ router.delete('/:_id', async(req, res) => {
 })
 
 router.put('/:_id', async(req, res) => {
-    const { _id: id } = req.params
+    const cartCond = { _id: req.params.id }
+    const prodCond = { _id: req.body.productsInCart }
+    const { _id: updatingCartId } = req.params
     const { productsInCart: [productsInAddP] } = req.body
     try {
-        const response = await cartsManager.updateOne(id, productsInAddP)
+        const response = await cartsManager.update(cartCond, prodCond)
         if (!response) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {

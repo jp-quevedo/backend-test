@@ -104,39 +104,15 @@ socketServer.on('connection', (socket) => {
 
         const findUpdatingCart = await cartsManager.findById(updatingCartId)
         console.log(findUpdatingCart)
-        // aquí muestra el cart vacío, previo al push
-
         if (findUpdatingCart) {
             const { productsInCart } = findUpdatingCart
             productsInCart.push(productsInAddP)
+            const cartUpdated = await cartsManager.createOne(findUpdatingCart)
+            console.log(cartUpdated)
         }
-        console.log(findUpdatingCart)
-        // este es el segundo log, mostrando el push en el body del cart
-
-        const cartUpdated = await cartsManager.updateOne(updatingCartId, productsInAddP)
-        console.log(cartUpdated)
-        // cuando quiero llevar este cambio al servidor, ya sea por updateOne, replaceOne o findOneAndUpdate
-        // me arroja siempre el resultado { acknowledged: false }
-
         const newCartsArray = await cartsManager.findAll()
-        //console.log(newCartsArray)
-
         socket.emit('cartUpdated', newCartsArray)
-    })    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    })
 
     socket.on('deleteCart', async(deletingCartId) => {
         const deletingCart = await cartsManager.deleteOne(deletingCartId)

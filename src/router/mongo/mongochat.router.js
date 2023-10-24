@@ -1,5 +1,5 @@
-import { Router } from 'express'
 import messagesManager from '../../managers/mongo/mongoMessagesManager.js'
+import { Router } from 'express'
 
 const router = Router()
 

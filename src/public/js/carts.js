@@ -10,7 +10,7 @@ const cTable = document.getElementById('cTable')
 
 createCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('createCart', { cartId })
+    socketClient.emit('createCart', [{ productsInAddP }])
 }
 
 socketClient.on('cartCreated', (creatingCart) => {

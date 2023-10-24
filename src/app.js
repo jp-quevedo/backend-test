@@ -95,8 +95,10 @@ socketServer.on('connection', (socket) => {
 
     // CARTS
     
-    socket.on('createCart', async(cartId) => {
-        const creatingCart = await cartsManager.createOne(cartId)
+    socket.on('createCart', async(productsInAddP) => {
+        const creatingCart = await cartsManager.createOne()
+        const completeCart = await cartsManager.addProductsToCart(productsInAddP)
+        console.log(completeCart)
         socket.emit('cartCreated', creatingCart)
     })
 
@@ -121,3 +123,5 @@ socketServer.on('connection', (socket) => {
         socket.emit('cartDeleted', newCartsArray)
     })
 })
+
+// rutas, query filter (population), aggregation, pages

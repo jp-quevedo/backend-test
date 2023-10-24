@@ -1,15 +1,20 @@
-import { Router } from 'express'
 import productsManager from '../../managers/mongo/mongoProductsManager.js'
+import { Router } from 'express'
 import { upload } from '../../middlewares/multer.middleware.js'
 
 const router = Router()
 
 router.get('/', async(req, res) => {
-    const products = await productsManager.findAll()
-    res.render('products', { products })
+    const products = await productsManager.productsFilter(req.query)
+    res.json('products', { products })
 })
 
-router.get('/:_id', async(req, res) => {
+router.get('/aggregation', async(req, res) => {
+    const products = await productsManager.aggregation()
+    res.json('products', { products })
+})
+
+router.get('/:id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const product = await productsManager.findById(id)
@@ -36,7 +41,7 @@ router.post('/', upload.single('productimage.jpeg'), async(req, res) => {
     }
 })
 
-router.delete('/:_id', async(req, res) => {
+router.delete('/:id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await productsManager.deleteOne(id, req.body)
@@ -50,7 +55,7 @@ router.delete('/:_id', async(req, res) => {
     }
 })
 
-router.put('/:_id', async(req, res) => {
+router.put('/:id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await productsManager.updateOne(id, req.body)

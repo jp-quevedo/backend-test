@@ -1,6 +1,6 @@
-import { Router } from 'express'
 import cartsManager from '../../managers/mongo/mongoCartsManager.js'
 import productsManager from '../../managers/mongo/mongoProductsManager.js'
+import { Router } from 'express'
 
 const router = Router()
 
@@ -10,10 +10,10 @@ router.get('/', async(req, res) => {
     res.render('carts', { carts, products })
 })
 
-router.get('/:_id', async(req, res) => {
+router.get('/:id', async(req, res) => {
     const { _id: id } = req.params
     try {
-        const cart = await cartsManager.findById(id)
+        const cart = await cartsManager.findCartById(id)
         if (!cart) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
@@ -26,14 +26,14 @@ router.get('/:_id', async(req, res) => {
 
 router.post('/', async(req, res) => {
     try {
-        const newCart = await cartsManager.createOne()
+        const newCart = await cartsManager.createCart(req.body)
         res.status(200).json({ message: 'Cart created', cart: newCart })
     } catch (error) {
         res.status(500).json({ message: error })
     }
 })
 
-router.delete('/:_id', async(req, res) => {
+router.delete('/:id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await cartsManager.deleteOne(id, req.body)
@@ -47,11 +47,9 @@ router.delete('/:_id', async(req, res) => {
     }
 })
 
-router.put('/:_id', async(req, res) => {
+router.put('/:id', async(req, res) => {
     const cartCond = { _id: req.params.id }
-    const prodCond = { _id: req.body.productsInCart }
-    const { _id: updatingCartId } = req.params
-    const { productsInCart: [productsInAddP] } = req.body
+    const prodCond = [{ _id: req.body.productsInCart }]
     try {
         const response = await cartsManager.update(cartCond, prodCond)
         if (!response) {

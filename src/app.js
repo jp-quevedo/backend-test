@@ -1,18 +1,24 @@
 import express from 'express'
 import handlebars from 'express-handlebars'
-import viewsRouter from './router/views.router.js'
-import cartsRouter from './router/carts.router.js'
-import productsRouter from './router/products.router.js'
-import usersRouter from './router/users.router.js'
+
+/*
+import viewsRouter from './router/fs/views.router.js'
+import cartsRouter from './router/fs/carts.router.js'
+import productsRouter from './router/fs/products.router.js'
+import usersRouter from './router/fs/users.router.js'
+*/
+
 import mongoViewsRouter from './router/mongo/mongoviews.router.js'
 import mongoCartsRouter from './router/mongo/mongocarts.router.js'
 import mongoChatRouter from './router/mongo/mongochat.router.js'
 import mongoProductsRouter from './router/mongo/mongoproducts.router.js'
 import mongoUsersRouter from './router/mongo/mongousers.router.js'
+
 import messagesManager from './managers/mongo/mongoMessagesManager.js'
 import productsManager from './managers/mongo/mongoProductsManager.js'
 import usersManager from './managers/mongo/mongoUsersManager.js'
 import cartsManager from './managers/mongo/mongoCartsManager.js'
+
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
 import './dbs/config.js'
@@ -27,10 +33,12 @@ app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
-//app.use('/api', viewsRouter)
-//app.use('/api/carts', cartsRouter)
-//app.use('/api/products', productsRouter)
-//app.use('/api/users', usersRouter)
+/*
+app.use('/api', viewsRouter)
+app.use('/api/carts', cartsRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/users', usersRouter)
+*/
 
 app.use('/api', mongoViewsRouter)
 app.use('/api/chat', mongoChatRouter)
@@ -86,6 +94,19 @@ socketServer.on('connection', (socket) => {
         socket.emit('userCreated', creatingUser)
     })
 
+    socket.on('updateUser', async(newUserUpdate) => {
+        const updatingUser = await usersManager.findById(newUserUpdate._id)
+        if (updatingUser) {
+            updatingUser.name = newUserUpdate.name,
+            updatingUser.email = newUserUpdate.email,
+            updatingUser.password = newUserUpdate.password
+            const updateSaved = await updatingUser.save()
+            console.log(updateSaved)
+            const newUsersUpdated = await usersManager.findAll()
+            socket.emit('userUpdated', newUsersUpdated)
+        }
+    })
+
     socket.on('deleteUser', async(deletingUserId) => {
         const deletingUser = await usersManager.deleteOne(deletingUserId)
         console.log(deletingUser)
@@ -95,25 +116,16 @@ socketServer.on('connection', (socket) => {
 
     // CARTS
     
-    socket.on('createCart', async(productsInAddP) => {
+    socket.on('createCart', async() => {
         const creatingCart = await cartsManager.createOne()
-        const completeCart = await cartsManager.addProductsToCart(productsInAddP)
-        console.log(completeCart)
         socket.emit('cartCreated', creatingCart)
     })
 
     socket.on('updateCart', async (updatingCartId, productsInAddP) => {
-
+        console.log(productsInAddP)
         const findUpdatingCart = await cartsManager.findById(updatingCartId)
-        console.log(findUpdatingCart)
-        if (findUpdatingCart) {
-            const { productsInCart } = findUpdatingCart
-            productsInCart.push(productsInAddP)
-            const cartUpdated = await cartsManager.createOne(findUpdatingCart)
-            console.log(cartUpdated)
-        }
-        const newCartsArray = await cartsManager.findAll()
-        socket.emit('cartUpdated', newCartsArray)
+        findUpdatingCart.productsInCart.push(productsInAddP)
+        findUpdatingCart.save()
     })
 
     socket.on('deleteCart', async(deletingCartId) => {

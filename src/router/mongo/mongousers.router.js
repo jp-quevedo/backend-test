@@ -3,16 +3,12 @@ import { Router } from 'express'
 
 const router = Router()
 
-router.get('/signup', (req, res) => {
-    res.render('signup')
-})
-
 router.get('/', async(req, res) => {
     const users = await usersManager.findAll()
     res.render('users', { users })
 })
 
-router.get('/:id', async(req, res) => {
+router.get('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const user = await usersManager.findById(id)
@@ -40,7 +36,7 @@ router.post('/', async(req, res) => {
 }
 });
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await usersManager.deleteOne(id, req.body)
@@ -54,7 +50,7 @@ router.delete('/:id', async(req, res) => {
 }
 });
 
-router.put('/:id', async(req, res) => {
+router.put('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await usersManager.updateOne(id, req.body)

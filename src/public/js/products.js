@@ -1,6 +1,8 @@
 const socketClient = io()
+
+// CREATE IMPORT
+
 const createForm = document.getElementById('createForm')
-const deleteForm = document.getElementById('deleteForm')
 const productId = document.getElementById('productId')
 const productTitle = document.getElementById('productTitle')
 const productDescription = document.getElementById('productDescription')
@@ -9,20 +11,43 @@ const productPrice = document.getElementById('productPrice')
 const productStatus = document.getElementById('productStatus')
 const productStock = document.getElementById('productStock')
 const productCategory = document.getElementById('productCategory')
+
+// UPDATE IMPORT
+
+// DELETE IMPORT
+
+const deleteForm = document.getElementById('deleteForm')
+
+// TABLE IMPORT
+
 const rtpTable = document.getElementById('rtpTable')
+
+// CREATE EVENT
 
 createForm.onsubmit = (e) => {
     e.preventDefault()
-    const newProduct = {
-        title: productTitle.value,
-        description: productDescription.value,
-        code: productCode.value,
-        price: productPrice.value,
-        status: productStatus.value,
-        stock: productStock.value,
-        category: productCategory.value,
+    if (
+        productTitle.value == '' &&
+        productDescription.value == '' &&
+        productCode.value == '' &&
+        productPrice.value == '' &&
+        productStatus.value == '' &&
+        productStock.value == '' &&
+        productCategory.value == ''
+        ) {
+        alert('Some data is missing!')
+    } else {
+        const newProduct = {
+            title: productTitle.value,
+            description: productDescription.value,
+            code: productCode.value,
+            price: productPrice.value,
+            status: productStatus.value,
+            stock: productStock.value,
+            category: productCategory.value,
+        }
+        socketClient.emit('createProduct', newProduct)
     }
-    socketClient.emit('createProduct', newProduct)
 }
 
 socketClient.on('productCreated', (creatingProduct) => {
@@ -41,6 +66,10 @@ socketClient.on('productCreated', (creatingProduct) => {
     `
     rtpTable.innerHTML += productRow
 })
+
+// UPDATE EVENT
+
+// DELETE EVENT
 
 deleteForm.onsubmit = (e) => {
     e.preventDefault()

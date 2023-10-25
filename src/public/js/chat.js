@@ -13,7 +13,7 @@ const { value: email } = Swal.fire({
     inputPlaceholder: 'Enter your email address'
     }).then((input) => {
         userEmail = input.value,
-        userName.innerText = `Chat user: ${ userEmail }`
+        userName.innerText = `Chat User: ${ userEmail }`
         socketClient.emit('newChatUser', userEmail)
     })
 

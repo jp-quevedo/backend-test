@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/', async(req, res) => {
     const products = await productsManager.productsFilter(req.query)
-    res.json('products', { products })
+    res.render('products', { products })
 })
 
 router.get('/aggregation', async(req, res) => {

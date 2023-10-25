@@ -9,7 +9,7 @@ export default class BasicManager {
     }
 
     async findById(id){
-        return this.model.findById(id)
+        return this.model.findById({ _id: id })
     }
 
     async createOne(obj){

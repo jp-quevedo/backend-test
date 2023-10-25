@@ -2,11 +2,11 @@ import { Schema, SchemaTypes, model } from 'mongoose'
 
 const cartsSchema = new Schema({
     productsInCart: [{
-        product: {
+        product:{
             type: SchemaTypes.ObjectId,
             ref: 'Products'
         },
-        quantity: {
+        quantity:{
             type: Number,
         }
     }]

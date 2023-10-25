@@ -10,7 +10,7 @@ router.get('/', async(req, res) => {
     res.render('carts', { carts, products })
 })
 
-router.get('/:id', async(req, res) => {
+router.get('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const cart = await cartsManager.findCartById(id)
@@ -33,7 +33,7 @@ router.post('/', async(req, res) => {
     }
 })
 
-router.delete('/:id', async(req, res) => {
+router.delete('/:_id', async(req, res) => {
     const { _id: id } = req.params
     try {
         const response = await cartsManager.deleteOne(id, req.body)

@@ -1,16 +1,29 @@
 const socketClient = io()
+
+// CREATE IMPORT
+
 const createCartForm = document.getElementById('createCartForm')
-const deleteCartForm = document.getElementById('deleteCartForm')
+const cartId = document.getElementById('cartId')
+const productIdInCreation = document.getElementById('productsInCreation')
+
+// UPDATE IMPORT
+
 const updateCartForm = document.getElementById('updateCartForm')
 const updatingCartId = document.getElementById('updatingCartId')
-const cartId = document.getElementById('cartId')
+const productIdInUpdate = document.getElementById('productsInUpdate')
+
+// DELETE IMPORT
+
+const deleteCartForm = document.getElementById('deleteCartForm')
 const deletingCartId = document.getElementById('deletingCartId')
-const productsInAddP = document.getElementById('productsInAddP')
+
+// TABLE IMPORT
+
 const cTable = document.getElementById('cTable')
 
 createCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('createCart', [{ productsInAddP }])
+    socketClient.emit('createCart', [{ productIdInCreation }])
 }
 
 socketClient.on('cartCreated', (creatingCart) => {
@@ -26,7 +39,7 @@ socketClient.on('cartCreated', (creatingCart) => {
 
 updateCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('updateCart', { _id: updatingCartId.value }, productsInAddP.value)
+    socketClient.emit('updateCart', { _id: updatingCartId.value }, { product: productIdInUpdate.value, quantity: 1 })
 }
 
 socketClient.on('cartUpdated', (newCartsArray) => {

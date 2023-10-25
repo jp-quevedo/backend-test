@@ -3,7 +3,6 @@ const socketClient = io()
 // CREATE IMPORT
 
 const createForm = document.getElementById('createForm')
-const productId = document.getElementById('productId')
 const productTitle = document.getElementById('productTitle')
 const productDescription = document.getElementById('productDescription')
 const productCode = document.getElementById('productCode')
@@ -14,9 +13,20 @@ const productCategory = document.getElementById('productCategory')
 
 // UPDATE IMPORT
 
+const updateForm = document.getElementById('updateForm')
+const productIdUpdate = document.getElementById('productIdUpdate')
+const productTitleUpdate = document.getElementById('productTitleUpdate')
+const productDescriptionUpdate = document.getElementById('productDescriptionUpdate')
+const productCodeUpdate = document.getElementById('productCodeUpdate')
+const productPriceUpdate = document.getElementById('productPriceUpdate')
+const productStatusUpdate = document.getElementById('productStatusUpdate')
+const productStockUpdate = document.getElementById('productStockUpdate')
+const productCategoryUpdate = document.getElementById('productCategoryUpdate')
+
 // DELETE IMPORT
 
 const deleteForm = document.getElementById('deleteForm')
+const deletingProductId = document.getElementById('deletingProductId')
 
 // TABLE IMPORT
 
@@ -69,11 +79,71 @@ socketClient.on('productCreated', (creatingProduct) => {
 
 // UPDATE EVENT
 
+updateForm.onsubmit = (e) => {
+    e.preventDefault()
+    if (
+        productIdUpdate.value == '' &&
+        productTitleUpdate.value == '' &&
+        productDescriptionUpdate.value == '' &&
+        productCodeUpdate.value == '' &&
+        productPriceUpdate.value == '' &&
+        productStatusUpdate.value == '' &&
+        productStockUpdate.value == '' &&
+        productCategoryUpdate.value == ''
+        ) {
+        alert('Some data is missing!')
+    } else {
+        const newProductUpdate = {
+            _id: productIdUpdate.value,
+            title: productTitleUpdate.value,
+            description: productDescriptionUpdate.value,
+            code: productCodeUpdate.value,
+            price: productPriceUpdate,
+            status: productStatusUpdate,
+            stock: productStockUpdate,
+            category: productCategoryUpdate
+        }
+        socketClient.emit('updateProduct', newProductUpdate)
+    }
+}
+
+socketClient.on('productUpdated', (newProductsUpdate) => {
+    let products = `<thead>
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Code</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Stock</th>
+            <th>Category</th>
+        </tr>
+    </thead>`
+    newProductsUpdate
+        .map((objProducts) => 
+        products += `<tr>
+            <td>${objProducts._id}</td>
+            <td>${objProducts.title}</td>
+            <td>${objProducts.description}</td>
+            <td>${objProducts.code}</td>
+            <td>${objProducts.price}</td>
+            <td>${objProducts.status}</td>
+            <td>${objProducts.stock}</td>
+            <td>${objProducts.category}</td>
+        </tr>`)
+    rtpTable.innerHTML = products
+})
+
 // DELETE EVENT
 
 deleteForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('deleteProduct', { _id: productId.value })
+    if (deletingProductId.value == '') {
+        alert('Some data is missing!')
+    } else {
+    socketClient.emit('deleteProduct', { _id: deletingProductId.value })
+    }
 }
 
 socketClient.on('productDeleted', (newProductsArray) => {

@@ -1,17 +1,25 @@
 <div>
     <h2>Create Cart</h2>
     <form id='createCartForm' method='post'>
-        Product Id: <input type='string' name='productIdInCreation' id='productIdInCreation'>
         <input type='submit' value='Create'>
     </form>
 </div>
 
 <div>
-    <h2>Add Products to Cart</h2>
+    <h2>Add Products to a Cart</h2>
     <form id='updateCartForm'>
         Cart Id: <input type='string' name='updatingCartId' id='updatingCartId'>
-        Product Id: <input type='string' name='productIdInUpdate' id='productIdInUpdate'>
-        <input type='submit' value='Add'>
+        Product Id: <input type='string' name='productsInAddP' id='productsInAddP'>
+        <input type='submit' value='Add Product'>
+    </form>
+</div>
+
+<div>
+    <h2>Delete Products from a Cart</h2>
+    <form id='deletePFCartForm'>
+        Cart Id: <input type='string' name='deletePFCartId' id='deletePFCartId'>
+        Product Id: <input type='string' name='deletingProduct' id='deletingProduct'>
+        <input type='submit' value='Delete Product'>
     </form>
 </div>
 

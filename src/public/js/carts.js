@@ -6,11 +6,17 @@ const createCartForm = document.getElementById('createCartForm')
 const cartId = document.getElementById('cartId')
 const productIdInCreation = document.getElementById('productsInCreation')
 
-// UPDATE IMPORT
+// ADD PRODUCTS IMPORT
 
 const updateCartForm = document.getElementById('updateCartForm')
 const updatingCartId = document.getElementById('updatingCartId')
-const productIdInUpdate = document.getElementById('productsInUpdate')
+const productsInAddP = document.getElementById('productsInAddP')
+
+// DELETE PRODUCTS IMPORT
+
+const deletePFCartForm = document.getElementById('deletePFCartForm')
+const deletePFCartId = document.getElementById('deletePFCartId')
+const deletingProduct = document.getElementById('deletingProduct')
 
 // DELETE IMPORT
 
@@ -21,9 +27,11 @@ const deletingCartId = document.getElementById('deletingCartId')
 
 const cTable = document.getElementById('cTable')
 
+// CREATE CART EVENT
+
 createCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('createCart', [{ productIdInCreation }])
+    socketClient.emit('createCart', )
 }
 
 socketClient.on('cartCreated', (creatingCart) => {
@@ -37,9 +45,17 @@ socketClient.on('cartCreated', (creatingCart) => {
     cTable.innerHTML += cartRow
 })
 
+// ADD PRODUCTS EVENT
+
 updateCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('updateCart', { _id: updatingCartId.value }, { product: productIdInUpdate.value, quantity: 1 })
+    if (updatingCartId.value == '' ||
+        productsInAddP.value == ''
+    ) {
+        alert('Some data is missing!')
+    } else {
+        socketClient.emit('updateCart', { _id: updatingCartId.value }, { product: productsInAddP.value, quantity: 1 })
+    }
 }
 
 socketClient.on('cartUpdated', (newCartsArray) => {
@@ -58,9 +74,44 @@ socketClient.on('cartUpdated', (newCartsArray) => {
     cTable.innerHTML = carts
 })
 
+// DELETE PRODUCTS EVENT
+
+deletePFCartForm.onsubmit = (e) => {
+    e.preventDefault()
+    if (deletePFCartId.value == '' ||
+    deletingProduct.value == ''
+    ) {
+        alert('Some data is missing!')
+    } else {
+        socketClient.emit('deletePFCart', { _id: deletePFCartId.value }, { product: deletingProduct.value, quantity: 1 })
+    }
+}
+
+socketClient.on('productFCDeleted', (newPFCartsArray) => {
+    let carts = `<thead>
+        <tr>
+            <th>Cart Id</th>
+            <th>Products Id</th>
+        </tr>
+    </thead>`
+    newPFCartsArray
+        .map((objCarts) => 
+        carts += `<tr>
+            <td>${objCarts._id}</td>
+            <td>${objCarts.productsInCart}</td>
+        </tr>`)
+    cTable.innerHTML = carts
+})
+
+// DELETE CART EVENT
+
 deleteCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('deleteCart', { _id: deletingCartId.value })
+    if (deletingCartId.value == '') {
+        alert('Some data is missing!')
+    } else {
+        socketClient.emit('deleteCart', { _id: deletingCartId.value })
+    }
 }
 
 socketClient.on('cartDeleted', (newCartsArray) => {

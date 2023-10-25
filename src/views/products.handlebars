@@ -13,9 +13,24 @@
 </div>
 
 <div>
+    <h2>Update Product</h2>
+    <form id='updateForm' method='post'>
+        Id: <input type='text' name='productIdUpdate' id='productIdUpdate'>
+        Title: <input type='text' name='productTitleUpdate' id='productTitleUpdate'>
+        Description: <input type='text' name='productDescriptionUpdate' id='productDescriptionUpdate'>
+        Code: <input type='text' name='productCodeUpdate' id='productCodeUpdate'>
+        Price: <input type='number' name='productPriceUpdate' id='productPriceUpdate'>
+        Status: <input type='text' name='productStatusUpdate' id='productStatusUpdate'>
+        Stock: <input type='number' name='productStockUpdate' id='productStockUpdate'>
+        Category: <input type='text' name='productCategoryUpdate' id='productCategoryUpdate'>
+        <input type='submit' value='Update'>
+    </form>
+</div>
+
+<div>
     <h2>Delete Product</h2>
     <form id='deleteForm'>
-        Id: <input type='string' name='productId' id='productId'>
+        Id: <input type='string' name='deletingProductId' id='deletingProductId'>
         <input type='submit' value='Delete'>
     </form>
 </div>

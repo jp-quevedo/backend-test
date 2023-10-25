@@ -80,6 +80,23 @@ socketServer.on('connection', (socket) => {
         socket.emit('productCreated', creatingProduct)
     })
 
+    socket.on('updateProduct', async(newProductUpdate) => {
+        const updatingProduct = await productsManager.findById(newProductUpdate._id)
+        if (updatingProduct) {
+            updatingProduct.title = updatingProduct.title,
+            updatingProduct.description = updatingProduct.description,
+            updatingProduct.code = updatingProduct.code,
+            updatingProduct.price = updatingProduct.price,
+            updatingProduct.status = updatingProduct.status,
+            updatingProduct.stock = updatingProduct.stock,
+            updatingProduct.category = updatingProduct.category
+            const updateSaved = await updatingProduct.save()
+            console.log(updateSaved)
+            const newProductsUpdate = await usersManager.findAll()
+            socket.emit('productUpdated', newProductsUpdate)
+        }
+    })
+
     socket.on('deleteProduct', async(productId) => {
         const deletingProduct = await productsManager.deleteOne(productId)
         console.log(deletingProduct)
@@ -122,12 +139,25 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('updateCart', async (updatingCartId, productsInAddP) => {
-        console.log(productsInAddP)
-        const findUpdatingCart = await cartsManager.findById(updatingCartId)
+        const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
         findUpdatingCart.productsInCart.push(productsInAddP)
         findUpdatingCart.save()
+        const newCartsArray = await cartsManager.findAll()
+        socket.emit('cartUpdated', newCartsArray)
     })
 
+    socket.on('deletePFCart', async (deletePFCartId, deletingProductId) => {
+        const findCart = await cartsManager.findById(deletePFCartId._id)
+        if (findCart) {
+            const productIndex = findCart.productsInCart.findIndex(obj => obj.product == deletingProductId.product)
+            findCart.productsInCart.splice(productIndex, 1)
+            const updateSaved = await findCart.save()
+            console.log(updateSaved)
+            const newPFCartsArray = await cartsManager.findAll()
+            socket.emit('productFCDeleted', newPFCartsArray)
+        }
+    })
+    
     socket.on('deleteCart', async(deletingCartId) => {
         const deletingCart = await cartsManager.deleteOne(deletingCartId)
         console.log(deletingCart)

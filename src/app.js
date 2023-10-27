@@ -83,25 +83,32 @@ socketServer.on('connection', (socket) => {
     socket.on('updateProduct', async(newProductUpdate) => {
         const updatingProduct = await productsManager.findById(newProductUpdate._id)
         if (updatingProduct) {
-            updatingProduct.title = updatingProduct.title,
-            updatingProduct.description = updatingProduct.description,
-            updatingProduct.code = updatingProduct.code,
-            updatingProduct.price = updatingProduct.price,
-            updatingProduct.status = updatingProduct.status,
-            updatingProduct.stock = updatingProduct.stock,
-            updatingProduct.category = updatingProduct.category
-            const updateSaved = await updatingProduct.save()
-            console.log(updateSaved)
-            const newProductsUpdate = await usersManager.findAll()
-            socket.emit('productUpdated', newProductsUpdate)
+            updatingProduct.title = newProductUpdate.title,
+            updatingProduct.description = newProductUpdate.description,
+            updatingProduct.code = newProductUpdate.code,
+            updatingProduct.price = newProductUpdate.price,
+            updatingProduct.status = newProductUpdate.status,
+            updatingProduct.stock = newProductUpdate.stock,
+            updatingProduct.category = newProductUpdate.category
+            const productUpdateSaved = await updatingProduct.save()
+            console.log(productUpdateSaved)
+            const newProductUpdated = await usersManager.findAll()
+            socket.emit('productUpdated', newProductUpdated)
+        } else {
+            return 'The product requested does not exist'
         }
     })
 
-    socket.on('deleteProduct', async(productId) => {
-        const deletingProduct = await productsManager.deleteOne(productId)
-        console.log(deletingProduct)
-        const newProductsArray = await productsManager.findAll()
-        socket.emit('productDeleted', newProductsArray)
+    socket.on('deleteProduct', async(newProductDelete) => {
+        const product = await productsManager.findById(newProductDelete._id)
+        if (product) {
+            const deletingProduct = await productsManager.deleteOne(newProductDelete._id)
+            console.log(deletingProduct)
+            const newProductsArray = await productsManager.findAll()
+            socket.emit('productDeleted', newProductsArray)
+        } else {
+            return 'The product requested does not exist'
+        }
     })
 
     // USERS
@@ -121,14 +128,21 @@ socketServer.on('connection', (socket) => {
             console.log(updateSaved)
             const newUsersUpdated = await usersManager.findAll()
             socket.emit('userUpdated', newUsersUpdated)
+        } else {
+            return 'The user requested does not exist'
         }
     })
 
-    socket.on('deleteUser', async(deletingUserId) => {
-        const deletingUser = await usersManager.deleteOne(deletingUserId)
-        console.log(deletingUser)
-        const newUsersArray = await usersManager.findAll()
-        socket.emit('userDeleted', newUsersArray)
+    socket.on('deleteUser', async(newUserDelete) => {
+        const deleteUser = await usersManager.findById(newUserDelete._id)
+        console.log(deleteUser)
+        if (deleteUser) {
+            const deletingUser = await usersManager.deleteOne(newUserDelete._id)
+            const newUsersArray = await usersManager.findAll()
+            socket.emit('userDeleted', newUsersArray)
+        } else {
+            return 'The user requested does not exist'
+        }
     })
 
     // CARTS
@@ -140,10 +154,15 @@ socketServer.on('connection', (socket) => {
 
     socket.on('updateCart', async (updatingCartId, productsInAddP) => {
         const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
-        findUpdatingCart.productsInCart.push(productsInAddP)
-        findUpdatingCart.save()
-        const newCartsArray = await cartsManager.findAll()
-        socket.emit('cartUpdated', newCartsArray)
+        if (findUpdatingCart) {
+            const { productsInCart } = findUpdatingCart
+            findUpdatingCart.productsInCart.push(productsInAddP)
+            findUpdatingCart.save()
+            const newCartsArray = await cartsManager.findAll()
+            socket.emit('cartUpdated', newCartsArray)
+        } else {
+            return 'The cart requested does not exist'
+        }
     })
 
     socket.on('deletePFCart', async (deletePFCartId, deletingProductId) => {
@@ -155,14 +174,21 @@ socketServer.on('connection', (socket) => {
             console.log(updateSaved)
             const newPFCartsArray = await cartsManager.findAll()
             socket.emit('productFCDeleted', newPFCartsArray)
+        } else {
+            return 'The cart requested does not exist'
         }
     })
     
-    socket.on('deleteCart', async(deletingCartId) => {
-        const deletingCart = await cartsManager.deleteOne(deletingCartId)
-        console.log(deletingCart)
-        const newCartsArray = await cartsManager.findAll()
-        socket.emit('cartDeleted', newCartsArray)
+    socket.on('deleteCart', async(cartDelete) => {
+        const cart = await cartsManager.findById(cartDelete._id)
+        if (cart) {
+            const deletingCart = await cartsManager.deleteOne(cartDelete._id)
+            console.log(deletingCart)
+            const newCartsArray = await cartsManager.findAll()
+            socket.emit('cartDeleted', newCartsArray)
+        } else {
+            return 'The cart requested does not exist'
+        }
     })
 })
 

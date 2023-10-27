@@ -7,15 +7,10 @@ class CartsManager extends BasicManager {
         super(cartsModel)
     }
 
-    async createCart(obj){
-        const newCart = await cartsManager.create(obj)
-        return newCart
-    }
-
     async findCartById(id) {
-        const cart = await cartsManager
-            .findById(id)
-            .populate('products', ['title', 'price'])
+        const cart = await cartsModel
+            .findById({ _id: id })
+            .populate('productsInCart.product', ['title', 'price'])
         return cart
     }
 

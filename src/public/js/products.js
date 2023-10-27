@@ -13,7 +13,7 @@ const productCategory = document.getElementById('productCategory')
 
 // UPDATE IMPORT
 
-const updateForm = document.getElementById('updateForm')
+const updateProductForm = document.getElementById('updateProductForm')
 const productIdUpdate = document.getElementById('productIdUpdate')
 const productTitleUpdate = document.getElementById('productTitleUpdate')
 const productDescriptionUpdate = document.getElementById('productDescriptionUpdate')
@@ -79,10 +79,9 @@ socketClient.on('productCreated', (creatingProduct) => {
 
 // UPDATE EVENT
 
-updateForm.onsubmit = (e) => {
+updateProductForm.onsubmit = (e) => {
     e.preventDefault()
-    if (
-        productIdUpdate.value == '' &&
+    if (productIdUpdate.value == '' &&
         productTitleUpdate.value == '' &&
         productDescriptionUpdate.value == '' &&
         productCodeUpdate.value == '' &&
@@ -90,7 +89,7 @@ updateForm.onsubmit = (e) => {
         productStatusUpdate.value == '' &&
         productStockUpdate.value == '' &&
         productCategoryUpdate.value == ''
-        ) {
+    ) {
         alert('Some data is missing!')
     } else {
         const newProductUpdate = {
@@ -98,16 +97,16 @@ updateForm.onsubmit = (e) => {
             title: productTitleUpdate.value,
             description: productDescriptionUpdate.value,
             code: productCodeUpdate.value,
-            price: productPriceUpdate,
-            status: productStatusUpdate,
-            stock: productStockUpdate,
-            category: productCategoryUpdate
+            price: productPriceUpdate.value,
+            status: productStatusUpdate.value,
+            stock: productStockUpdate.value,
+            category: productCategoryUpdate.value,
         }
         socketClient.emit('updateProduct', newProductUpdate)
     }
 }
 
-socketClient.on('productUpdated', (newProductsUpdate) => {
+socketClient.on('productUpdated', (newProductUpdated) => {
     let products = `<thead>
         <tr>
             <th>Id</th>
@@ -120,7 +119,7 @@ socketClient.on('productUpdated', (newProductsUpdate) => {
             <th>Category</th>
         </tr>
     </thead>`
-    newProductsUpdate
+    newProductUpdated
         .map((objProducts) => 
         products += `<tr>
             <td>${objProducts._id}</td>
@@ -142,7 +141,8 @@ deleteForm.onsubmit = (e) => {
     if (deletingProductId.value == '') {
         alert('Some data is missing!')
     } else {
-    socketClient.emit('deleteProduct', { _id: deletingProductId.value })
+        const newProductDelete = { _id: deletingProductId.value }
+    socketClient.emit('deleteProduct', newProductDelete)
     }
 }
 

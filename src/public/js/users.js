@@ -102,7 +102,8 @@ deleteUserForm.onsubmit = (e) => {
     if (deletingUserId.value == '') {
         alert('Some data is missing!')
     } else {
-    socketClient.emit('deleteUser', { _id: deletingUserId.value })
+        const newUserDelete = { _id: deletingUserId.value }
+    socketClient.emit('deleteUser', newUserDelete)
     }
 }
 

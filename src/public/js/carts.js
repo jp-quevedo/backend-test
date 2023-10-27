@@ -110,7 +110,8 @@ deleteCartForm.onsubmit = (e) => {
     if (deletingCartId.value == '') {
         alert('Some data is missing!')
     } else {
-        socketClient.emit('deleteCart', { _id: deletingCartId.value })
+        const cartDelete = { _id: deletingCartId.value }
+        socketClient.emit('deleteCart', cartDelete)
     }
 }
 

@@ -47,7 +47,7 @@ router.delete('/:_id', async(req, res) => {
     }
 })
 
-router.put('/:id', async(req, res) => {
+router.put('/:_id', async(req, res) => {
     const cartCond = { _id: req.params.id }
     const prodCond = [{ _id: req.body.productsInCart }]
     try {

@@ -7,6 +7,10 @@ class UsersManager extends BasicManager{
         super(usersModel)
     }
     
+    async findByEmail(email){
+        const response = await usersModel.findOne({ email })
+        return response
+    }
 }
 
 const usersManager = new UsersManager()

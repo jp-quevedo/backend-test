@@ -1,5 +1,8 @@
 import express from 'express'
 import handlebars from 'express-handlebars'
+import cookieParser from 'cookie-parser'
+import session from 'express-session'
+import MongoStore from 'connect-mongo'
 
 /*
 import viewsRouter from './router/fs/views.router.js'
@@ -13,6 +16,7 @@ import mongoCartsRouter from './router/mongo/mongocarts.router.js'
 import mongoChatRouter from './router/mongo/mongochat.router.js'
 import mongoProductsRouter from './router/mongo/mongoproducts.router.js'
 import mongoUsersRouter from './router/mongo/mongousers.router.js'
+import mongoSessionRouter from './router/mongo/mongosession.router.js'
 
 import messagesManager from './managers/mongo/mongoMessagesManager.js'
 import productsManager from './managers/mongo/mongoProductsManager.js'
@@ -25,9 +29,22 @@ import './dbs/config.js'
 
 const app = express()
 
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
+
+const URI = "mongodb+srv://coderuser:coderpass@codercluster.fg9aj6q.mongodb.net/ecommerce?retryWrites=true&w=majority"
+
+app.use(session({
+    secret: 'supersecretkey',
+    cookie: {
+        maxAge: 60 * 60 * 1000
+    },
+    store: new MongoStore({
+        mongoUrl: URI
+    })
+}))
 
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
@@ -45,6 +62,7 @@ app.use('/api/chat', mongoChatRouter)
 app.use('/api/carts', mongoCartsRouter)
 app.use('/api/products', mongoProductsRouter)
 app.use('/api/users', mongoUsersRouter)
+app.use('/api/session', mongoSessionRouter)
 
 const PORT = 8080
 
@@ -191,5 +209,3 @@ socketServer.on('connection', (socket) => {
         }
     })
 })
-
-// rutas, query filter (population), aggregation, pages

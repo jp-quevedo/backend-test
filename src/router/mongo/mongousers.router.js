@@ -20,7 +20,7 @@ router.get('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
 }
-});
+})
 
 router.post('/', async(req, res) => {
     const { name, email, password } = req.body
@@ -34,7 +34,7 @@ router.post('/', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
 }
-});
+})
 
 router.delete('/:_id', async(req, res) => {
     const { _id: id } = req.params
@@ -48,7 +48,7 @@ router.delete('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
 }
-});
+})
 
 router.put('/:_id', async(req, res) => {
     const { _id: id } = req.params
@@ -62,6 +62,6 @@ router.put('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-});
+})
 
 export default router

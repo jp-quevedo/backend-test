@@ -3,6 +3,20 @@ import { Router } from 'express'
 
 const router = Router()
 
+router.post('/signup', async(req, res) => {
+    const { name, email, password } = req.body
+    if (!name || !email || !password) {
+        return res.status(400).json({ message: 'Some data is missing' })
+    }
+    try {
+        const newUser = await usersManager.createOne(req.body)
+        req.user = newUser
+        res.redirect('/api/users')
+    } catch (error) {
+        res.status(500).json({ message: error })
+    }
+})
+
 router.post('/login', async (req, res) => {
     const { loginEmail, loginPassword } = req.body
     const userInDB = await usersManager.findByEmail(loginEmail)
@@ -23,18 +37,14 @@ router.post('/login', async (req, res) => {
     }
 })
 
-router.post('/signup', async(req, res) => {
-    const { name, email, password } = req.body
-    if (!name || !email || !password) {
-        return res.status(400).json({ message: 'Some data is missing' })
-    }
-    try {
-        const newUser = await usersManager.createOne(req.body)
-        req.user = newUser
-        res.redirect('/api/users')
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
+router.get('/logout', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            console.log('Error destroying session:', error)
+        } else {
+        res.redirect('/api/session/login')
+        }
+    })
 })
 
 export default router

@@ -1,4 +1,9 @@
-<h2>User logged in!</h2>
-<h4>Username {{name}} is enrolled to email {{email}}</h4>
-
-<h2>Log Out: TBA</h2>
+<div>
+    {{#if name}}
+        <h2>User logged in!</h2>
+        <h4>Username {{name}} is enrolled to email {{email}}</h4>
+        <a href='/api/session/logout'>Log Out</a>
+    {{else}}
+        <a href='/api/session/login'>Log In</a>
+    {{/if}}
+</div>

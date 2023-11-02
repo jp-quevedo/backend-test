@@ -14,6 +14,14 @@ const usersSchema = new Schema({
         type: String,
         required: true,
     },
+    isAdmin:{
+        type: Boolean,
+        default: false,
+    },
+    isFromGithub:{
+        type: Boolean,
+        default: false,
+    }
 })
 
 export const usersModel = model('Users', usersSchema)

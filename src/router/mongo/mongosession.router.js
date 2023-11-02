@@ -1,4 +1,4 @@
-//import usersManager from '../../managers/mongo/mongoUsersManager.js'
+import usersManager from '../../managers/mongo/mongoUsersManager.js'
 import passport from 'passport'
 import { Router } from 'express'
 // import { compareData, hashData } from '../../utils.js'
@@ -57,6 +57,8 @@ router.get('/logout', (req, res) => {
     })
 })
 
+// LOCAL
+
 router.post('/signup', passport.authenticate('signup', {
     successRedirect: '/api/users',
     failureRedirect: '/api/error'
@@ -66,5 +68,31 @@ router.post('/login', passport.authenticate('login', {
     successRedirect: '/api/home',
     failureRedirect: '/api/error'
 }))
+
+// GITHUB
+
+router.get('/auth/github',
+    passport.authenticate('github', { scope: ['user: email']
+}))
+
+router.get('/github', 
+    passport.authenticate('github', {
+        failureRedirect: '/error'
+    }),
+    (req, res) => {
+        req.session.user = req.user
+        res.redirect('/home')
+    }
+)
+
+router.get('/:_id', async (req, res) => {
+    const { _id: userId } = req.params
+    try {
+        const user = await usersManager.findById(userId)
+        res.status(200).json({ message: 'User found', user })
+    } catch (error) {
+        res.status(500).json({ error })
+    }
+})
 
 export default router

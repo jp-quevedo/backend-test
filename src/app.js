@@ -3,6 +3,7 @@ import handlebars from 'express-handlebars'
 import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
+import passport from 'passport'
 
 /*
 import viewsRouter from './router/fs/views.router.js'
@@ -26,6 +27,7 @@ import cartsManager from './managers/mongo/mongoCartsManager.js'
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
 import './dbs/config.js'
+import './passport.js'
 
 const app = express()
 
@@ -45,6 +47,8 @@ app.use(session({
         mongoUrl: URI
     })
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
@@ -209,3 +213,6 @@ socketServer.on('connection', (socket) => {
         }
     })
 })
+
+// como se puede aplicar populate de products en ruta carts
+// condicional log in / out en home con passport

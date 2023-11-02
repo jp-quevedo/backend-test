@@ -1,9 +1,11 @@
-import usersManager from '../../managers/mongo/mongoUsersManager.js'
+//import usersManager from '../../managers/mongo/mongoUsersManager.js'
+import passport from 'passport'
 import { Router } from 'express'
-import { compareData, hashData } from '../../utils.js'
+// import { compareData, hashData } from '../../utils.js'
 
 const router = Router()
 
+/*
 router.post('/signup', async(req, res) => {
     const { name, email, password } = req.body
     const hashedPassword = await hashData(password)
@@ -23,12 +25,12 @@ router.post('/login', async (req, res) => {
     const { loginEmail, loginPassword } = req.body
     const userInDB = await usersManager.findByEmail(loginEmail)
     if (!userInDB) {
-        return res.status(400).json({ message: 'Email or password is wrong' })
+        return res.status(401).json({ message: 'Email or password is wrong' })
     }
     try {
         const comparePassword = await compareData(loginPassword, userInDB.password)
         if (!comparePassword) {
-            return res.json({ error: 'Email or password is wrong' })
+            return res.status(401).json({ message: 'Email or password is wrong' })
         } else {
             req.session['email'] = loginEmail
             req.session['name'] = userInDB.name
@@ -37,12 +39,13 @@ router.post('/login', async (req, res) => {
             } else {
                 req.session['isAdmin'] = false
             }
-            res.redirect('/api/session')
+            res.redirect('/api/home')
         }
     } catch (error) {
         res.status(500).json({ message: error })
     }
 })
+*/
 
 router.get('/logout', (req, res) => {
     req.session.destroy((error) => {
@@ -53,5 +56,15 @@ router.get('/logout', (req, res) => {
         }
     })
 })
+
+router.post('/signup', passport.authenticate('signup', {
+    successRedirect: '/api/users',
+    failureRedirect: '/api/error'
+}))
+
+router.post('/login', passport.authenticate('login', {
+    successRedirect: '/api/home',
+    failureRedirect: '/api/error'
+}))
 
 export default router

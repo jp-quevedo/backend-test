@@ -72,8 +72,9 @@ router.post('/login', passport.authenticate('login', {
 // GITHUB
 
 router.get('/auth/github',
-    passport.authenticate('github', { scope: ['user: email']
-}))
+    passport.authenticate('github', { scope: ['user: email']}),
+    async (req, res) => {}    
+)
 
 router.get('/github', 
     passport.authenticate('github', {

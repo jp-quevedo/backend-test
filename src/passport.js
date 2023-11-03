@@ -61,20 +61,24 @@ passport.use('github', new githubStrategy(
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
-            const userInDB = await usersManager.findByEmail(profile.email)
-            if (userInDB) {
+            console.log(profile)
+            const userInDB = await usersManager.findByEmail({ email: profile._json.email })
+            if (!userInDB) {
+                const newUser = {
+                    name: profile._json.name,
+                    email: profile._json.email,
+                    password: '',
+                    isFromGithub: true
+                }
+                const response = await usersManager.createOne(newUser)
+                done(null, response)
+            } else {
                 if (userInDB.isFromGithub) {
                     return done(null, userInDB)
                 } else {
                     return done(null, false)
                 }
-            }
-            const newUser = {
-                name: 'x',
-                email: 'x',
-                password: 'x',
-                isFromGithub: true
-            }
+            }            
         } catch (error) {
             done(error)
         }

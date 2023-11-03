@@ -9,7 +9,11 @@ class UsersManager extends BasicManager{
     
     async findByEmail(email){
         const response = await usersModel.findOne({ email })
-        return response
+        if (!response) {
+            return console.log('User not found')
+        } else {
+            return response
+        }
     }
 }
 

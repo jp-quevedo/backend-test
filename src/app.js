@@ -216,11 +216,4 @@ socketServer.on('connection', (socket) => {
 
 // como se puede aplicar populate de products en ruta carts
 // condicional log in / out en home con passport
-// Error: Failed to obtain access token
-//     at /Users/jp/Desktop/CODER/backend/pruebas/clase4/node_modules/passport-oauth2/lib/strategy.js:178:49
-//     at /Users/jp/Desktop/CODER/backend/pruebas/clase4/node_modules/oauth/lib/oauth2.js:209:7
-//     at passBackControl (/Users/jp/Desktop/CODER/backend/pruebas/clase4/node_modules/oauth/lib/oauth2.js:134:9)
-//     at IncomingMessage.<anonymous> (/Users/jp/Desktop/CODER/backend/pruebas/clase4/node_modules/oauth/lib/oauth2.js:157:7)
-//     at IncomingMessage.emit (node:events:526:35)
-//     at endReadableNT (node:internal/streams/readable:1408:12)
-//     at process.processTicksAndRejections (node:internal/process/task_queues:82:21)
+// error en signup con github, hasheo pass

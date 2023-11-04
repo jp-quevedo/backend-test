@@ -5,9 +5,15 @@ import { Router } from 'express'
 const router = Router()
 
 router.get('/', async(req, res) => {
-    const carts = await cartsManager.findAll()
+    const carts = await cartsManager.findCarts()
+    let productsArray = []
+    carts.map(products => {
+        let cart = { _id: products._id, products: [] }
+        products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
+        productsArray.push(cart)
+    })
     const products = await productsManager.findAll()
-    res.render('carts', { carts, products })
+    res.render('carts', { carts, products, productsArray })
 })
 
 router.get('/:_id', async(req, res) => {

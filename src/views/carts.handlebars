@@ -37,15 +37,18 @@
         <thead>
             <tr>
                 <th>Cart Id</th>
-                <th>Products Id</th>
+                <th>Products</th>
             </tr>
         </thead>
         <tbody>
-            {{#each carts}}
-            <tr>
-                <td>{{_id}}</td>
-                <td>{{productsInCart}}</td>
-            </tr>
+            {{#each productsArray}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    {{#each this.products}}
+                        <td>{{this.title}}</td>
+                        <td>${{this.price}}, </td>
+                    {{/each}}
+                </tr>
             {{/each}}
         </tbody>
     </table>

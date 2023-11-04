@@ -18,10 +18,16 @@ router.get('/error', (req, res) => {
 })
 
 router.get('/home', async (req, res) => {
-    const carts = await cartsManager.findAll()
+    const carts = await cartsManager.findCarts()
+    let productsArray = []
+    carts.map(products => {
+        let cart = { _id: products._id, products: [] }
+        products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
+        productsArray.push(cart)
+    })
     const products = await productsManager.findAll()
     const users = await usersManager.findAll()
-    res.render('home', { carts, products, users, name: req.user.name })
+    res.render('home', { carts, products, productsArray, users, name: req.user.name })
 })
 
 export default router

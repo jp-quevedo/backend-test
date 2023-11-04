@@ -25,7 +25,7 @@
                 <td>{{title}}</td>
                 <td>{{description}}</td>
                 <td>{{code}}</td>
-                <td>{{price}}</td>
+                <td>${{price}}</td>
                 <td>{{status}}</td>
                 <td>{{stock}}</td>
                 <td>{{category}}</td>
@@ -45,11 +45,14 @@
             </tr>
         </thead>
         <tbody>
-            {{#each carts}}
-            <tr>
-                <td>{{_id}}</td>
-                <td>{{productsInCart}}</td>
-            </tr>
+            {{#each productsArray}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    {{#each this.products}}
+                        <td>{{this.title}}</td>
+                        <td>${{this.price}}, </td>
+                    {{/each}}
+                </tr>
             {{/each}}
         </tbody>
     </table>

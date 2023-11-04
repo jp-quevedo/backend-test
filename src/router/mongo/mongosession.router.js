@@ -82,7 +82,7 @@ router.get('/github',
     }),
     (req, res) => {
         req.session.user = req.user
-        res.redirect('/home')
+        res.redirect('/api/home')
     }
 )
 

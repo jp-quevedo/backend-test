@@ -213,7 +213,3 @@ socketServer.on('connection', (socket) => {
         }
     })
 })
-
-// como se puede aplicar populate de products en ruta carts
-// condicional log in / out en home con passport
-// error en signup con github, hasheo pass

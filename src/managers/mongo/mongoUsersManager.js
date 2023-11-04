@@ -15,6 +15,16 @@ class UsersManager extends BasicManager{
             return response
         }
     }
+
+    async findGithub(email){
+        const response = await usersModel.findOne(email)
+        if (!response) {
+            return console.log('User not found')
+        } else {
+            return response
+        }
+    }
+
 }
 
 const usersManager = new UsersManager()

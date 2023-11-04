@@ -78,7 +78,7 @@ router.get('/auth/github',
 
 router.get('/github', 
     passport.authenticate('github', {
-        failureRedirect: '/error'
+        failureRedirect: '/api/error'
     }),
     (req, res) => {
         req.session.user = req.user

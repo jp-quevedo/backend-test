@@ -52,24 +52,24 @@ passport.use('login', new localStrategy(
     }
 ))
 
-// GITHUB 
+// GITHUB
 
 passport.use('github', new githubStrategy(  
     {
         clientID: 'Iv1.e979cc04ca7e3dac',
         clientSecret: '74af7b2e55e2f1e30529accbadc066d252ba3a5e',
         callbackURL: 'http://localhost:8080/api/session/github',
-        scope: ['user: email']
+        scope: ['user:email']
     },
     async (accessToken, refreshToken, profile, done) => {
         console.log(profile.emails[0].value)
         try {
-            const userInDB = await usersManager.findByEmail({ email: profile.emails[0].value })
+            const userInDB = await usersManager.findGithub({ email: profile.emails[0].value })
             if (!userInDB) {
                 const newUser = {
                     name: profile._json.name,
                     email: profile.emails[0].value,
-                    password: 'x',
+                    password: '1234',
                     isFromGithub: true
                 }
                 const response = await usersManager.createOne(newUser)

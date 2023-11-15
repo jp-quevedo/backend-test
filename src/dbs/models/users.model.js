@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, SchemaTypes } from 'mongoose'
 
 const usersSchema = new Schema({
     name:{
@@ -21,6 +21,17 @@ const usersSchema = new Schema({
     isFromGithub:{
         type: Boolean,
         default: false,
+    },
+    usersCart:{
+        cart:{
+        type: SchemaTypes.ObjectId,
+        ref: 'Carts',
+        },
+        _id: false
+    },
+    role:{
+        type: String,
+        default: 'user'
     }
 })
 

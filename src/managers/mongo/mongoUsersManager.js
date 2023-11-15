@@ -4,7 +4,7 @@ import BasicManager from './mongoBasicManager.js'
 class UsersManager extends BasicManager{
 
     constructor(){
-        super(usersModel)
+        super(usersModel, 'cart._id')
     }
     
     async findByEmail(email){

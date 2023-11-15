@@ -18,7 +18,6 @@ class CartsManager extends BasicManager {
         const cart = await cartsModel
             .findById({ _id: id })
             .populate('productsInCart.product', ['title', 'price'])
-            console.log(cart)
         return cart
     }
 

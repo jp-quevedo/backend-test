@@ -26,7 +26,7 @@ import cartsManager from './managers/mongo/mongoCartsManager.js'
 
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
-import './dbs/config.js'
+import './dbs/DBConfig.js'
 import './passport.js'
 
 const app = express()
@@ -145,7 +145,9 @@ socketServer.on('connection', (socket) => {
         if (updatingUser) {
             updatingUser.name = newUserUpdate.name,
             updatingUser.email = newUserUpdate.email,
-            updatingUser.password = newUserUpdate.password
+            updatingUser.password = newUserUpdate.password,
+            updatingUser.isAdmin = newUserUpdate.isAdmin,
+            updatingUser.usersCart = newUserUpdate.usersCart
             const updateSaved = await updatingUser.save()
             console.log(updateSaved)
             const newUsersUpdated = await usersManager.findAll()
@@ -178,8 +180,15 @@ socketServer.on('connection', (socket) => {
         const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
         if (findUpdatingCart) {
             const { productsInCart } = findUpdatingCart
-            findUpdatingCart.productsInCart.push(productsInAddP)
-            findUpdatingCart.save()
+            const productIndex = findUpdatingCart.productsInCart.findIndex((p) => 
+                p.product.equals(productsInAddP.product))
+                if (productIndex === -1) {
+                    findUpdatingCart.productsInCart.push(productsInAddP)
+                    findUpdatingCart.save()
+                } else {
+                    findUpdatingCart.productsInCart[productIndex].quantity++
+                    findUpdatingCart.save()
+                }
             const newCartsArray = await cartsManager.findAll()
             socket.emit('cartUpdated', newCartsArray)
         } else {

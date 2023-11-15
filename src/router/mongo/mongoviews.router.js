@@ -13,6 +13,10 @@ router.get('/session/signup', (req, res) => {
     res.render('signup')
 })
 
+router.get('/currentsession', (req, res) => {
+    res.render('currentsession', { name: req.user.name })
+})
+
 router.get('/error', (req, res) => {
     res.render('error')
 })
@@ -27,7 +31,7 @@ router.get('/home', async (req, res) => {
     })
     const products = await productsManager.findAll()
     const users = await usersManager.findAll()
-    res.render('home', { carts, products, productsArray, users, name: req.user.name })
+    res.render('home', { carts, products, productsArray, users })
 })
 
 export default router

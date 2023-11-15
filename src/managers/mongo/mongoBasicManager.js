@@ -1,7 +1,8 @@
 export default class BasicManager {
 
-    constructor(model){
+    constructor(model, populateOption){
         this.model = model
+        this.populateOption = populateOption
     }
 
     async findAll(){

@@ -65,7 +65,7 @@ router.post('/signup', passport.authenticate('signup', {
 }))
 
 router.post('/login', passport.authenticate('login', {
-    successRedirect: '/api/home',
+    successRedirect: '/api/currentsession',
     failureRedirect: '/api/error'
 }))
 
@@ -82,7 +82,7 @@ router.get('/github',
     }),
     (req, res) => {
         req.session.user = req.user
-        res.redirect('/api/home')
+        res.redirect('/api/session/current')
     }
 )
 

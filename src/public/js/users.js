@@ -2,11 +2,11 @@ const socketClient = io()
 
 // CREATE IMPORT
 
-const createUserForm = document.getElementById('createUserForm')
-const userId = document.getElementById('userId')
-const userName = document.getElementById('userName')
-const userEmail = document.getElementById('userEmail')
-const userPassword = document.getElementById('userPassword')
+// const createUserForm = document.getElementById('createUserForm')
+// const userId = document.getElementById('userId')
+// const userName = document.getElementById('userName')
+// const userEmail = document.getElementById('userEmail')
+// const userPassword = document.getElementById('userPassword')
 
 // UPDATE IMPORT
 
@@ -15,6 +15,8 @@ const userIdUpdate = document.getElementById('userIdUpdate')
 const userNameUpdate = document.getElementById('userNameUpdate')
 const userEmailUpdate = document.getElementById('userEmailUpdate')
 const userPasswordUpdate = document.getElementById('userPasswordUpdate')
+const userIsAdminUpdate = document.getElementById('userIsAdminUpdate')
+const userCartUpdate = document.getElementById('userCartUpdate')
 
 // DELETE IMPORT
 
@@ -27,34 +29,35 @@ const usersTable = document.getElementById('usersTable')
 
 // CREATE EVENT
 
-createUserForm.onsubmit = (e) => {
-    e.preventDefault()
-    if (userName.value == '' &&
-        userEmail.value == '' &&
-        userPassword.value == ''
-    ) {
-        alert('Some data is missing!')
-    } else {
-        const newUser = {
-            name: userName.value,
-            email: userEmail.value,
-            password: userPassword.value,
-        }
-        socketClient.emit('createUser', newUser)
-    }
-}
+// createUserForm.onsubmit = (e) => {
+//     e.preventDefault()
+//     if (userName.value == '' &&
+//         userEmail.value == '' &&
+//         userPassword.value == ''
+//     ) {
+//         alert('Some data is missing!')
+//     } else {
+//         const newUser = {
+//             name: userName.value,
+//             email: userEmail.value,
+//             password: userPassword.value,
+//         }
+//         socketClient.emit('createUser', newUser)
+//     }
+// }
 
-socketClient.on('userCreated', (creatingUser) => {
-    const { _id, name, email } = creatingUser
-    const userRow = `
-        <tr>
-            <td>${_id}</td>
-            <td>${name}</td>
-            <td>${email}</td>
-        </tr>
-    `
-    usersTable.innerHTML += userRow
-})
+// socketClient.on('userCreated', (creatingUser) => {
+//     const { _id, name, email, isAdmin } = creatingUser
+//     const userRow = `
+//         <tr>
+//             <td>${_id}</td>
+//             <td>${name}</td>
+//             <td>${email}</td>
+//             <td>${isAdmin}</td>
+//         </tr>
+//     `
+//     usersTable.innerHTML += userRow
+// })
 
 // UPDATE EVENT
 
@@ -63,7 +66,9 @@ updateUserForm.onsubmit = (e) => {
     if (userIdUpdate.value == '' &&
         userNameUpdate.value == '' &&
         userEmailUpdate.value == '' &&
-        userPasswordUpdate.value == ''
+        userPasswordUpdate.value == '' &&
+        userIsAdminUpdate.value == '' &&
+        userCartUpdate.value == ''
     ) {
         alert('Some data is missing!')
     } else {
@@ -72,6 +77,8 @@ updateUserForm.onsubmit = (e) => {
             name: userNameUpdate.value,
             email: userEmailUpdate.value,
             password: userPasswordUpdate.value,
+            isAdmin: userIsAdminUpdate.value,
+            cart: userCartUpdate.value
         }
         socketClient.emit('updateUser', newUserUpdate)
     }
@@ -83,6 +90,8 @@ socketClient.on('userUpdated', (newUserUpdated) => {
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Is Admin</th>
+            <th>Cart Id</th>
         </tr>
     </thead>`
     newUserUpdated
@@ -91,6 +100,8 @@ socketClient.on('userUpdated', (newUserUpdated) => {
             <td>${objUsers._id}</td>
             <td>${objUsers.name}</td>
             <td>${objUsers.email}</td>
+            <td>${objUsers.isAdmin}</td>
+            <td>${objUsers.usersCart}</td>
         </tr>`)
     usersTable.innerHTML = users
 })
@@ -113,6 +124,8 @@ socketClient.on('userDeleted', (newUsersArray) => {
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
+            <th>Is Admin</th>
+            <th>Cart Id</th>
         </tr>
     </thead>`
     newUsersArray
@@ -121,6 +134,8 @@ socketClient.on('userDeleted', (newUsersArray) => {
             <td>${objUsers._id}</td>
             <td>${objUsers.name}</td>
             <td>${objUsers.email}</td>
+            <td>${objUsers.isAdmin}</td>
+            <td>${objUsers.usersCart}</td>
         </tr>`)
     usersTable.innerHTML = users
 })

@@ -8,7 +8,8 @@ const cartsSchema = new Schema({
         },
         quantity:{
             type: Number,
-        }
+        },
+        _id: false
     }]
 })
 

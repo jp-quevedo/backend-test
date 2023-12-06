@@ -1,33 +1,26 @@
+import cookieParser from 'cookie-parser'
 import express from 'express'
 import handlebars from 'express-handlebars'
-import cookieParser from 'cookie-parser'
-import session from 'express-session'
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
+import session from 'express-session'
 
-/*
-import viewsRouter from './router/fs/views.router.js'
-import cartsRouter from './router/fs/carts.router.js'
-import productsRouter from './router/fs/products.router.js'
-import usersRouter from './router/fs/users.router.js'
-*/
+import cartsRouter from './routes/carts.router.js'
+import chatRouter from './routes/chat.router.js'
+import productsRouter from './routes/products.router.js'
+import sessionRouter from './routes/session.router.js'
+import usersRouter from './routes/users.router.js'
+import viewsRouter from './routes/views.router.js'
 
-import mongoViewsRouter from './router/mongo/mongoviews.router.js'
-import mongoCartsRouter from './router/mongo/mongocarts.router.js'
-import mongoChatRouter from './router/mongo/mongochat.router.js'
-import mongoProductsRouter from './router/mongo/mongoproducts.router.js'
-import mongoUsersRouter from './router/mongo/mongousers.router.js'
-import mongoSessionRouter from './router/mongo/mongosession.router.js'
+import cartsManager from './dao/cartsManager.js'
+import messagesManager from './dao/messagesManager.js'
+import productsManager from './dao/productsManager.js'
+import usersManager from './dao/usersManager.js'
 
-import messagesManager from './managers/mongo/mongoMessagesManager.js'
-import productsManager from './managers/mongo/mongoProductsManager.js'
-import usersManager from './managers/mongo/mongoUsersManager.js'
-import cartsManager from './managers/mongo/mongoCartsManager.js'
-
-import { __dirname } from './utils.js'
+import { __dirname } from './services/utils.js'
 import { Server } from 'socket.io'
-import './dbs/DBConfig.js'
-import './passport.js'
+import './dao/dbs/DBConfig.js'
+import './services/passport.js'
 
 const app = express()
 
@@ -54,19 +47,12 @@ app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
-/*
-app.use('/api', viewsRouter)
 app.use('/api/carts', cartsRouter)
+app.use('/api/chat', chatRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/users', usersRouter)
-*/
-
-app.use('/api', mongoViewsRouter)
-app.use('/api/chat', mongoChatRouter)
-app.use('/api/carts', mongoCartsRouter)
-app.use('/api/products', mongoProductsRouter)
-app.use('/api/users', mongoUsersRouter)
-app.use('/api/session', mongoSessionRouter)
+app.use('/api/session', sessionRouter)
+app.use('/api', viewsRouter)
 
 const PORT = 8080
 
@@ -77,6 +63,59 @@ const httpServer = app.listen(PORT, () => {
 const socketServer = new Server(httpServer)
 
 socketServer.on('connection', (socket) => {
+
+    // CARTS
+    
+    socket.on('createCart', async() => {
+        const creatingCart = await cartsManager.createOne()
+        socket.emit('cartCreated', creatingCart)
+    })
+
+    socket.on('updateCart', async (updatingCartId, productsInAddP) => {
+        const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
+        if (findUpdatingCart) {
+            const { productsInCart } = findUpdatingCart
+            const productIndex = findUpdatingCart.productsInCart.findIndex((p) => 
+                p.product.equals(productsInAddP.product))
+                if (productIndex === -1) {
+                    findUpdatingCart.productsInCart.push(productsInAddP)
+                    findUpdatingCart.save()
+                } else {
+                    findUpdatingCart.productsInCart[productIndex].quantity++
+                    findUpdatingCart.save()
+                }
+            const newCartsArray = await cartsManager.findAll()
+            socket.emit('cartUpdated', newCartsArray)
+        } else {
+            return 'The cart requested does not exist'
+        }
+    })
+
+    socket.on('deletePFCart', async (deletePFCartId, deletingProductId) => {
+        const findCart = await cartsManager.findById(deletePFCartId._id)
+        if (findCart) {
+            const productIndex = findCart.productsInCart.findIndex(obj => obj.product == deletingProductId.product)
+            findCart.productsInCart.splice(productIndex, 1)
+            const updateSaved = await findCart.save()
+            console.log(updateSaved)
+            const newPFCartsArray = await cartsManager.findAll()
+            socket.emit('productFCDeleted', newPFCartsArray)
+        } else {
+            return 'The cart requested does not exist'
+        }
+    })
+    
+    socket.on('deleteCart', async(cartDelete) => {
+        const cart = await cartsManager.findById(cartDelete._id)
+        if (cart) {
+            const deletingCart = await cartsManager.deleteOne(cartDelete._id)
+            console.log(deletingCart)
+            const newCartsArray = await cartsManager.findAll()
+            socket.emit('cartDeleted', newCartsArray)
+        } else {
+            return 'The cart requested does not exist'
+        }
+    })
 
     // CHAT
 
@@ -169,58 +208,7 @@ socketServer.on('connection', (socket) => {
         }
     })
 
-    // CARTS
-    
-    socket.on('createCart', async() => {
-        const creatingCart = await cartsManager.createOne()
-        socket.emit('cartCreated', creatingCart)
-    })
-
-    socket.on('updateCart', async (updatingCartId, productsInAddP) => {
-        const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
-        if (findUpdatingCart) {
-            const { productsInCart } = findUpdatingCart
-            const productIndex = findUpdatingCart.productsInCart.findIndex((p) => 
-                p.product.equals(productsInAddP.product))
-                if (productIndex === -1) {
-                    findUpdatingCart.productsInCart.push(productsInAddP)
-                    findUpdatingCart.save()
-                } else {
-                    findUpdatingCart.productsInCart[productIndex].quantity++
-                    findUpdatingCart.save()
-                }
-            const newCartsArray = await cartsManager.findAll()
-            socket.emit('cartUpdated', newCartsArray)
-        } else {
-            return 'The cart requested does not exist'
-        }
-    })
-
-    socket.on('deletePFCart', async (deletePFCartId, deletingProductId) => {
-        const findCart = await cartsManager.findById(deletePFCartId._id)
-        if (findCart) {
-            const productIndex = findCart.productsInCart.findIndex(obj => obj.product == deletingProductId.product)
-            findCart.productsInCart.splice(productIndex, 1)
-            const updateSaved = await findCart.save()
-            console.log(updateSaved)
-            const newPFCartsArray = await cartsManager.findAll()
-            socket.emit('productFCDeleted', newPFCartsArray)
-        } else {
-            return 'The cart requested does not exist'
-        }
-    })
-    
-    socket.on('deleteCart', async(cartDelete) => {
-        const cart = await cartsManager.findById(cartDelete._id)
-        if (cart) {
-            const deletingCart = await cartsManager.deleteOne(cartDelete._id)
-            console.log(deletingCart)
-            const newCartsArray = await cartsManager.findAll()
-            socket.emit('cartDeleted', newCartsArray)
-        } else {
-            return 'The cart requested does not exist'
-        }
-    })
 })
 
-// home deslogueado, log in github
+// CAMBIO DE RED MATA CONEXION CON MONGO ATLAS
+// CARTS Y SESSION HANDLEBARS

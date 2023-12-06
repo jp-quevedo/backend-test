@@ -1,5 +1,5 @@
-import { messagesModel } from '../../dbs/models/messages.model.js'
-import BasicManager from './mongoBasicManager.js'
+import { messagesModel } from './dbs/models/messages.model.js'
+import BasicManager from './basicManager.js'
 
 class MessagesManager extends BasicManager{
 

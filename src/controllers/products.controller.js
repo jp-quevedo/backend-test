@@ -1,28 +1,22 @@
-import productsManager from '../../managers/mongo/mongoProductsManager.js'
-import { Router } from 'express'
-import { upload } from '../../middlewares/multer.middleware.js'
+import { 
+    findAll,
+    findById,
+    createOne,
+    deleteOne,
+    updateOne,
+    productsFilter,
+    aggregation
+} from '../services/products.service.js'
 
-const router = Router()
-
-router.get('/', async(req, res) => {
-    const products = await productsManager.findAll()
+export const findProducts = async (req, res) => {
+    const products = await findAll()
     res.render('products', { products })
-})
+}
 
-router.get('/filter', async(req, res) => {
-    const products = await productsManager.productsFilter(req.query)
-    res.json({ products })
-})
-
-router.get('/aggregation', async(req, res) => {
-    const products = await productsManager.aggregation()
-    res.json({ products })
-})
-
-router.get('/:_id', async(req, res) => {
+export const findProductById = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const product = await productsManager.findById(id)
+        const product = await findById(id)
         if (!product) {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
         } else {
@@ -31,25 +25,25 @@ router.get('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-router.post('/', upload.single('productimage.jpeg'), async(req, res) => {
+export const createProduct = async (req, res) => {
     const { title, description, code, price, status, stock, category } = req.body
     if (!title || !description || !code || !price || !status || !stock || !category) {
         return res.status(400).json({ message: 'Some data is missing' });
     }
     try {
-        const newProduct = await productsManager.createOne(req.body)
+        const newProduct = await createOne(req.body)
         res.status(200).json({ message: 'Product created', product: newProduct })
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-router.delete('/:_id', async(req, res) => {
+export const deleteProduct = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await productsManager.deleteOne(id, req.body)
+        const response = await deleteOne(id, req.body)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
         } else {
@@ -58,12 +52,12 @@ router.delete('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-router.put('/:_id', async(req, res) => {
+export const updateProduct = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await productsManager.updateOne(id, req.body)
+        const response = await updateOne(id, req.body)
         if (response === -1) {
             res.status(200).json({ message: 'Product updated' })
         } else {
@@ -72,6 +66,14 @@ router.put('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-export default router
+export const filterProducts = async (req, res) => {
+    const products = await productsFilter(req.query)
+    res.json({ products })
+}
+
+export const aggregationProducts = async (req, res) => {
+    const products = await aggregation()
+    res.json({ products })
+}

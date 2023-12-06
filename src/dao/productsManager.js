@@ -1,5 +1,5 @@
-import { productsModel } from '../../dbs/models/products.model.js'
-import BasicManager from './mongoBasicManager.js'
+import { productsModel } from './dbs/models/products.model.js'
+import BasicManager from './basicManager.js'
 
 class ProductsManager extends BasicManager{
 

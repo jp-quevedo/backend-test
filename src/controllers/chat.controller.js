@@ -1,13 +1,10 @@
-import messagesManager from '../../managers/mongo/mongoMessagesManager.js'
-import { Router } from 'express'
+import messagesManager from '../dao/messagesManager.js'
 
-const router = Router()
-
-router.get('/', async(req, res) => {
+export const chatRender = async (req, res) => {
     res.render('chat')
-})
+}
 
-router.post('/', async(req, res) => {
+export const messagePost = async (req, res) => {
     const { userEmail, message } = req.body
     if (!userEmail || !message) {
         return res.status(400).json({ message: 'Some data is missing' });
@@ -19,6 +16,4 @@ router.post('/', async(req, res) => {
         res.status(500).json({ message: error })
     }
     res.render('chat')
-})
-
-export default router
+}

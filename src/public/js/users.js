@@ -1,13 +1,5 @@
 const socketClient = io()
 
-// CREATE IMPORT
-
-// const createUserForm = document.getElementById('createUserForm')
-// const userId = document.getElementById('userId')
-// const userName = document.getElementById('userName')
-// const userEmail = document.getElementById('userEmail')
-// const userPassword = document.getElementById('userPassword')
-
 // UPDATE IMPORT
 
 const updateUserForm = document.getElementById('updateUserForm')
@@ -26,38 +18,6 @@ const deletingUserId = document.getElementById('deletingUserId')
 // TABLE IMPORT
 
 const usersTable = document.getElementById('usersTable')
-
-// CREATE EVENT
-
-// createUserForm.onsubmit = (e) => {
-//     e.preventDefault()
-//     if (userName.value == '' &&
-//         userEmail.value == '' &&
-//         userPassword.value == ''
-//     ) {
-//         alert('Some data is missing!')
-//     } else {
-//         const newUser = {
-//             name: userName.value,
-//             email: userEmail.value,
-//             password: userPassword.value,
-//         }
-//         socketClient.emit('createUser', newUser)
-//     }
-// }
-
-// socketClient.on('userCreated', (creatingUser) => {
-//     const { _id, name, email, isAdmin } = creatingUser
-//     const userRow = `
-//         <tr>
-//             <td>${_id}</td>
-//             <td>${name}</td>
-//             <td>${email}</td>
-//             <td>${isAdmin}</td>
-//         </tr>
-//     `
-//     usersTable.innerHTML += userRow
-// })
 
 // UPDATE EVENT
 

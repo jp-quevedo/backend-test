@@ -1,5 +1,5 @@
 import passport from 'passport'
-import usersManager from './managers/mongo/mongoUsersManager.js'
+import usersManager from '../dao/usersManager.js'
 import { Strategy as localStrategy } from 'passport-local'
 import { Strategy as githubStrategy } from 'passport-github2'
 import { hashData, compareData } from './utils.js'

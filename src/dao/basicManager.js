@@ -17,12 +17,12 @@ export default class BasicManager {
         return this.model.create(obj)
     }
 
-    async updateOne(id, obj){
-        return this.model.updateOne({ _id: id }, obj)
-    }
-
     async deleteOne(id){
         return this.model.deleteOne({ _id: id })
+    }
+
+    async updateOne(id, obj){
+        return this.model.updateOne({ _id: id }, obj)
     }
 
 }

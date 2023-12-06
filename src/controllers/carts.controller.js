@@ -1,48 +1,52 @@
-import cartsManager from '../../managers/mongo/mongoCartsManager.js'
-import productsManager from '../../managers/mongo/mongoProductsManager.js'
-import { Router } from 'express'
+import productsManager from '../dao/productsManager.js'
+import { 
+    findAll,
+    findById,
+    createOne,
+    deleteOne,
+    updateOne
+} from '../services/carts.service.js'
 
-const router = Router()
-
-router.get('/', async(req, res) => {
-    const carts = await cartsManager.findCarts()
+export const findCarts = async (req, res) => {
+    const carts = await findAll()
     let productsArray = []
     carts.map(products => {
         let cart = { _id: products._id, products: [] }
         products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
         productsArray.push(cart)
     })
-    const products = await productsManager.findAll()
+    const products = productsManager.findAll()
     res.render('carts', { carts, products, productsArray })
-})
-
-router.get('/:_id', async(req, res) => {
-    const { _id: id } = req.params
-    try {
-        const cart = await cartsManager.findCartById(id)
-        if (!cart) {
-            res.status(400).json({ message: 'Could not find any cart with the id sent' })
-        } else {
-            res.status(200).json({ message: 'Cart found', cart })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
+    if (!carts) {
+        res.status(404).json({ message: 'Could not find any cart' })
+    } else {
+        res.status(200).json({ message: 'Carts found', carts })
     }
-})
+}
 
-router.post('/', async(req, res) => {
+export const findCartById = async (req, res) => {
+    const { _id: id } = req.params
+    const cart = await findById(id)
+    if (!cart) {
+        res.status(404).json({ message: 'Could not find any cart with the id sent' })
+    } else {
+        res.status(200).json({ message: 'Cart found', cart })
+    }
+}
+
+export const createCart = async (req, res) => {
     try {
-        const newCart = await cartsManager.createCart(req.body)
+        const newCart = await createOne(req.body)
         res.status(200).json({ message: 'Cart created', cart: newCart })
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-router.delete('/:_id', async(req, res) => {
+export const deleteCart = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await cartsManager.deleteOne(id, req.body)
+        const response = await deleteOne(id, req.body)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
@@ -51,13 +55,13 @@ router.delete('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
+}
 
-router.put('/:_id', async(req, res) => {
+export const updateCart = async (req, res) => {
     const cartCond = { _id: req.params.id }
     const prodCond = [{ _id: req.body.productsInCart }]
     try {
-        const response = await cartsManager.update(cartCond, prodCond)
+        const response = await updateOne(cartCond, prodCond)
         if (!response) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
@@ -67,6 +71,4 @@ router.put('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
-
-export default router
+}

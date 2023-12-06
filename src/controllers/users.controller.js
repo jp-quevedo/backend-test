@@ -1,12 +1,14 @@
-import usersManager from '../../managers/mongo/mongoUsersManager.js'
-import cartsManager from '../../managers/mongo/mongoCartsManager.js'
-import productsManager from '../../managers/mongo/mongoProductsManager.js'
-import { Router } from 'express'
+import cartsManager from '../dao/cartsManager.js'
+import productsManager from '../dao/productsManager.js'
+import { 
+    findAll,
+    findById,
+    deleteOne,
+    updateOne,
+} from '../services/users.service.js'
 
-const router = Router()
-
-router.get('/', async(req, res) => {
-    const users = await usersManager.findAll()
+export const findUsers = async (req, res) => {
+    const users = await findAll()
     const carts = await cartsManager.findCarts()
     let productsArray = []
     carts.map(products => {
@@ -16,12 +18,12 @@ router.get('/', async(req, res) => {
     })
     const products = await productsManager.findAll()
     res.render('users', { users, carts, products, productsArray })
-})
+}
 
-router.get('/:_id', async(req, res) => {
+export const findUserById = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const user = await usersManager.findById(id)
+        const user = await findById(id)
         if (!user) {
         res.status(400).json( {message: 'Could not find any user with the id sent' })
         } else {
@@ -29,27 +31,13 @@ router.get('/:_id', async(req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: error })
+    }
 }
-})
 
-// router.post('/', async(req, res) => {
-//     const { name, email, password } = req.body
-//     if (!name || !email || !password) {
-//         return res.status(400).json({ message: 'Some data is missing' })
-//     }
-//     try {
-//         const newUser = await usersManager.createOne(req.body)
-//         req.user = newUser
-//         res.redirect('/api/users')
-//     } catch (error) {
-//         res.status(500).json({ message: error })
-// }
-// })
-
-router.delete('/:_id', async(req, res) => {
+export const deleteUser = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await usersManager.deleteOne(id, req.body)
+        const response = await deleteOne(id, req.body)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any user with the id sent' })
         } else {
@@ -57,13 +45,13 @@ router.delete('/:_id', async(req, res) => {
         }
     } catch (error) {
         res.status(500).json({ message: error })
+    }
 }
-})
 
-router.put('/:_id', async(req, res) => {
+export const updateUser = async (req, res) => {
     const { _id: id } = req.params
     try {
-        const response = await usersManager.updateOne(id, req.body)
+        const response = await updateOne(id, req.body)
         if (response === -1) {
             res.status(400).json({ message: 'Could not find any user with the id sent' })
         } else {
@@ -72,6 +60,4 @@ router.put('/:_id', async(req, res) => {
     } catch (error) {
         res.status(500).json({ message: error })
     }
-})
-
-export default router
+}

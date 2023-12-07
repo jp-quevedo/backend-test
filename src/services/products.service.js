@@ -1,4 +1,4 @@
-import productsManager from '../dao/productsManager.js'
+import productsManager from '../dao/managers/productsManager.js'
 
 export const findAll = () => {
     const products = productsManager.findAll()

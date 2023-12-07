@@ -1,4 +1,4 @@
-import '../services/passport.js'
+import '../passport.js'
 import {
     emailFilter,
     githubFilter
@@ -22,10 +22,11 @@ export const localSignup = (req, res) => {
 }
 
 export const localLogin = (req, res) => {
-    passport.authenticate('login', {
-        successRedirect: '/api/currentsession',
-        failureRedirect: '/api/error'
-    })
+    // passport.authenticate('login', {
+    //     successRedirect: '/api/currentsession',
+    //     failureRedirect: '/api/error'
+    // })
+    res.render('login')
 }
 
 export const githubSignup = (req, res) => {

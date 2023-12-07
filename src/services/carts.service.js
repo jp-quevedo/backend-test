@@ -1,4 +1,4 @@
-import cartsManager from '../dao/cartsManager.js'
+import cartsManager from '../dao/managers/cartsManager.js'
 
 export const findAll = () => {
     const carts = cartsManager.findCarts()

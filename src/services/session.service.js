@@ -1,4 +1,4 @@
-import usersManager from '../dao/usersManager.js'
+import usersManager from '../dao/managers/usersManager.js'
 
 export const emailFilter = (email) => {
     const emailResponse = usersManager.findByEmail(email)

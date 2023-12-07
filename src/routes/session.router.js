@@ -1,3 +1,4 @@
+import passport from 'passport'
 import { Router } from 'express'
 import {
     logout,
@@ -14,8 +15,15 @@ router.get('/logout', logout)
 
 // LOCAL
 
-router.post('/signup', localSignup)
-router.post('/login', localLogin)
+router.get('/signup', localSignup)
+router.get(
+    '/login', 
+    passport.authenticate('login', {
+        successRedirect: '/api/currentsession',
+        // failureRedirect: '/api/error'
+    }),
+    localLogin
+)
 
 // GITHUB
 

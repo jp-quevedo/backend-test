@@ -12,15 +12,16 @@ import sessionRouter from './routes/session.router.js'
 import usersRouter from './routes/users.router.js'
 import viewsRouter from './routes/views.router.js'
 
-import cartsManager from './dao/cartsManager.js'
-import messagesManager from './dao/messagesManager.js'
-import productsManager from './dao/productsManager.js'
-import usersManager from './dao/usersManager.js'
+import cartsManager from './dao/managers/cartsManager.js'
+import messagesManager from './dao/managers/messagesManager.js'
+import productsManager from './dao/managers/productsManager.js'
+import usersManager from './dao/managers/usersManager.js'
 
-import { __dirname } from './services/utils.js'
+import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
-import './dao/dbs/DBConfig.js'
-import './services/passport.js'
+import config from './config/config.js'
+import './config/dbConfig.js'
+import './passport.js'
 
 const app = express()
 
@@ -29,7 +30,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 
-const URI = "mongodb+srv://coderuser:coderpass@codercluster.fg9aj6q.mongodb.net/ecommerce?retryWrites=true&w=majority"
+const MONGO_URI = config.mongo_uri
 
 app.use(session({
     secret: 'supersecretkey',
@@ -37,7 +38,7 @@ app.use(session({
         maxAge: 60 * 60 * 1000
     },
     store: new MongoStore({
-        mongoUrl: URI
+        mongoUrl: MONGO_URI
     })
 }))
 app.use(passport.initialize())
@@ -54,7 +55,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/session', sessionRouter)
 app.use('/api', viewsRouter)
 
-const PORT = 8080
+const PORT = config.port
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Listening to port ${ PORT } with Express`)
@@ -211,4 +212,8 @@ socketServer.on('connection', (socket) => {
 })
 
 // CAMBIO DE RED MATA CONEXION CON MONGO ATLAS
+
 // CARTS Y SESSION HANDLEBARS
+// MIDDLEWARE, ARCHIVOS SUELTOS, PASSPORT EN SERVICES?
+// ALGUNOS SERVICES NO SE JUSTIFICAN? 
+// MANEJO DE SOCKET

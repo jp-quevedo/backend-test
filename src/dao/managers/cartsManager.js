@@ -1,4 +1,4 @@
-import { cartsModel } from './dbs/models/carts.model.js'
+import { cartsModel } from '../models/carts.model.js'
 import BasicManager from './basicManager.js'
 
 class CartsManager extends BasicManager {

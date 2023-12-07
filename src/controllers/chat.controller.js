@@ -1,4 +1,4 @@
-import messagesManager from '../dao/messagesManager.js'
+import messagesManager from '../dao/managers/messagesManager.js'
 
 export const chatRender = async (req, res) => {
     res.render('chat')

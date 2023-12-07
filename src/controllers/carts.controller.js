@@ -1,4 +1,4 @@
-import productsManager from '../dao/productsManager.js'
+import productsManager from '../dao/managers/productsManager.js'
 import { 
     findAll,
     findById,
@@ -15,13 +15,13 @@ export const findCarts = async (req, res) => {
         products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
         productsArray.push(cart)
     })
-    const products = productsManager.findAll()
-    res.render('carts', { carts, products, productsArray })
-    if (!carts) {
-        res.status(404).json({ message: 'Could not find any cart' })
-    } else {
-        res.status(200).json({ message: 'Carts found', carts })
-    }
+    const products = await productsManager.findAll()
+    return res.render('carts', { carts, products, productsArray })
+    // if (!carts) {
+    //     res.status(404).json({ message: 'Could not find any cart' })
+    // } else {
+    //     res.status(200).json({ message: 'Carts found', carts })
+    // }
 }
 
 export const findCartById = async (req, res) => {

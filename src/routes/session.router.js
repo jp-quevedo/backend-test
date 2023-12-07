@@ -18,10 +18,19 @@ router.get('/logout', logout)
 router.get('/signup', localSignup)
 router.get(
     '/login', 
-    passport.authenticate('login', {
-        successRedirect: '/api/currentsession',
-        // failureRedirect: '/api/error'
-    }),
+    // passport.authenticate('login', {
+    //     successRedirect: '/api/currentsession',
+    //     failureRedirect: '/api/error'
+    // }),
+    localLogin
+)
+
+router.post(
+    '/login', 
+    // passport.authenticate('login', {
+    //     successRedirect: '/api/currentsession',
+    //     failureRedirect: '/api/error'
+    // }),
     localLogin
 )
 

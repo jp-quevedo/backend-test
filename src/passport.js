@@ -39,11 +39,11 @@ passport.use('login', new localStrategy(
         try {
             const userInDB = await usersManager.findByEmail(loginEmail)
             if(!userInDB) {
-                return done(null, false)
+                return done(null, true)
             }
             const comparePassword = await compareData(loginPassword, userInDB.password)
             if (!comparePassword) {
-                return done(null, false)
+                return done(null, true)
             }
             done(null, userInDB)
         } catch (error) {

@@ -1,13 +1,13 @@
-import passport from 'passport'
 import { Router } from 'express'
 import {
     logout,
     localSignup,
-    localLogin,
+    // localLogin,
     githubSignup,
     githubLogin,
 } from '../controllers/session.controller.js'
 import { findUserById } from '../controllers/users.controller.js'
+import passport from 'passport'
 
 const router = Router()
 
@@ -15,23 +15,22 @@ router.get('/logout', logout)
 
 // LOCAL
 
-router.get('/signup', localSignup)
-router.get(
-    '/login', 
-    // passport.authenticate('login', {
-    //     successRedirect: '/api/currentsession',
-    //     failureRedirect: '/api/error'
-    // }),
-    localLogin
+router.post(
+    '/signup',
+    passport.authenticate('signup', {
+        successRedirect: '/api/users',
+        failureRedirect: '/api/error'
+    }),
+    localSignup
 )
 
 router.post(
-    '/login', 
-    // passport.authenticate('login', {
-    //     successRedirect: '/api/currentsession',
-    //     failureRedirect: '/api/error'
-    // }),
-    localLogin
+    '/login',
+    passport.authenticate('login', {
+        successRedirect: '/api/currentsession',
+        failureRedirect: '/api/error'
+    }),
+    async (req, res) => res.render('login')
 )
 
 // GITHUB

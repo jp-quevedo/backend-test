@@ -1,4 +1,3 @@
-import passport from 'passport'
 import {
     emailFilter,
     githubFilter
@@ -14,20 +13,9 @@ export const logout = (req, res) => {
     })
 }
 
-export const localSignup = (req, res) => {
-    passport.authenticate('signup', {
-        successRedirect: '/api/users',
-        failureRedirect: '/api/error'
-    })
-}
+export const localSignup = (req, res) => { res.render('signup') }
 
-export const localLogin = (req, res) => {
-    passport.authenticate('login', {
-        successRedirect: '/api/currentsession',
-        // failureRedirect: '/api/error'
-    })
-    res.render('login')
-}
+export const localLogin = (req, res) => { res.render('login') }
 
 export const githubSignup = (req, res) => {
     passport.authenticate('github', { scope: ['user: email']}),

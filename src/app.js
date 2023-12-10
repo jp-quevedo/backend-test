@@ -19,9 +19,9 @@ import usersManager from './dao/managers/usersManager.js'
 
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
-import config from './config/config.js'
-import './config/dbConfig.js'
-import './passport.js'
+import config from './config/dotenv.config.js'
+import './config/db.config.js'
+import initializePassport from './config/passport.config.js'
 
 const app = express()
 
@@ -41,6 +41,7 @@ app.use(session({
         mongoUrl: MONGO_URI
     })
 }))
+initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
@@ -216,4 +217,4 @@ socketServer.on('connection', (socket) => {
 // CARTS Y SESSION HANDLEBARS rep
 // MIDDLEWARE, ARCHIVOS SUELTOS, PASSPORT EN SERVICES?
 // ALGUNOS SERVICES NO SE JUSTIFICAN? 
-// MANEJO DE SOCKET, como implementar en otro archivos
+// MANEJO DE SOCKET, como implementar en otro archivos 

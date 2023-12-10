@@ -9,19 +9,18 @@ import {
 
 export const findCarts = async (req, res) => {
     const carts = await findAll()
-    let productsArray = []
-    carts.map(products => {
-        let cart = { _id: products._id, products: [] }
-        products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
-        productsArray.push(cart)
-    })
-    const products = await productsManager.findAll()
-    return res.render('carts', { carts, products, productsArray })
-    // if (!carts) {
-    //     res.status(404).json({ message: 'Could not find any cart' })
-    // } else {
-    //     res.status(200).json({ message: 'Carts found', carts })
-    // }
+    if (!carts) {
+        res.status(404).json({ message: 'Could not find any cart' })
+    } else {
+        let productsArray = []
+        carts.map(products => {
+            let cart = { _id: products._id, products: [] }
+            products.productsInCart.map(product => cart.products.push({ title: product.product.title, price: product.product.price }))
+            productsArray.push(cart)
+        })
+        const products = await productsManager.findAll()
+        return res.render('carts', { carts, products, productsArray })
+    }
 }
 
 export const findCartById = async (req, res) => {

@@ -1,4 +1,4 @@
-import { messagesModel } from '../models/messages.model.js'
+import { messagesModel } from '../models/chats.model.js'
 import BasicManager from './basicManager.js'
 
 class MessagesManager extends BasicManager{

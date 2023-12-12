@@ -5,15 +5,14 @@ import MongoStore from 'connect-mongo'
 import passport from 'passport'
 import session from 'express-session'
 
-import cartsRouter from './routes/carts.router.js'
-import chatRouter from './routes/chat.router.js'
-import productsRouter from './routes/products.router.js'
-import sessionRouter from './routes/session.router.js'
-import usersRouter from './routes/users.router.js'
 import viewsRouter from './routes/views.router.js'
+import cartsRouter from './routes/carts.router.js'
+import messagesRouter from './routes/messages.router.js'
+import productsRouter from './routes/products.router.js'
+import usersRouter from './routes/users.router.js'
 
 import cartsManager from './dao/managers/cartsManager.js'
-import messagesManager from './dao/managers/messagesManager.js'
+import chatsManager from './dao/managers/chatsManager.js'
 import productsManager from './dao/managers/productsManager.js'
 import usersManager from './dao/managers/usersManager.js'
 
@@ -21,42 +20,36 @@ import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
 import config from './config/dotenv.config.js'
 import './config/db.config.js'
-import initializePassport from './config/passport.config.js'
+import './config/passport.config.js'
 
 const app = express()
+const MONGO_URI = config.mongo_uri
+const PORT = config.port
 
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 
-const MONGO_URI = config.mongo_uri
-
 app.use(session({
     secret: 'supersecretkey',
-    cookie: {
-        maxAge: 60 * 60 * 1000
-    },
+    cookie: { maxAge: 60 * 60 * 1000 },
     store: new MongoStore({
         mongoUrl: MONGO_URI
     })
 }))
-initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use('/api', viewsRouter)
+app.use('/api/carts', cartsRouter)
+app.use('/api/messages', messagesRouter)
+app.use('/api/products', productsRouter)
+app.use('/api/users', usersRouter)
 
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
-
-app.use('/api/carts', cartsRouter)
-app.use('/api/chat', chatRouter)
-app.use('/api/products', productsRouter)
-app.use('/api/users', usersRouter)
-app.use('/api/session', sessionRouter)
-app.use('/api', viewsRouter)
-
-const PORT = config.port
 
 const httpServer = app.listen(PORT, () => {
     console.log(`Listening to port ${ PORT } with Express`)
@@ -132,7 +125,7 @@ socketServer.on('connection', (socket) => {
     })
 
     socket.on('chatMessage', async(infoMessage) => {
-        const newMessage = await messagesManager.createOne(infoMessage)
+        const newMessage = await chatsManager.createOne(infoMessage)
         socketServer.emit('chat', newMessage)
     })
 
@@ -187,7 +180,7 @@ socketServer.on('connection', (socket) => {
             updatingUser.name = newUserUpdate.name,
             updatingUser.email = newUserUpdate.email,
             updatingUser.password = newUserUpdate.password,
-            updatingUser.isAdmin = newUserUpdate.isAdmin,
+            updatingUser.role = newUserUpdate.role,
             updatingUser.usersCart = newUserUpdate.usersCart
             const updateSaved = await updatingUser.save()
             console.log(updateSaved)
@@ -212,8 +205,10 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// CAMBIO DE RED MATA CONEXION CON MONGO ATLAS
+// update user, logout, github, mail de registro
 
+
+// CAMBIO DE RED MATA CONEXION CON MONGO ATLAS
 // CARTS Y SESSION HANDLEBARS rep
 // MIDDLEWARE, ARCHIVOS SUELTOS, PASSPORT EN SERVICES?
 // ALGUNOS SERVICES NO SE JUSTIFICAN? 

@@ -59,9 +59,9 @@ export const updateProduct = async (req, res) => {
     try {
         const response = await updateOne(id, req.body)
         if (response === -1) {
-            res.status(200).json({ message: 'Product updated' })
-        } else {
             res.status(400).json({ message: 'Could not find any product with the id sent' })
+        } else {
+            res.status(200).json({ message: 'Product updated' })
         }
     } catch (error) {
         res.status(500).json({ message: error })

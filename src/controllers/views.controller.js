@@ -15,18 +15,22 @@ export const homeRender = async (req, res) => {
     res.render('home', { carts, products, productsArray, users })
 }
 
-export const errorRender = async (req, res) => {
-    res.render('error')
+export const signupRender = async (req, res) => {
+    res.render('signup')
 }
 
 export const loginRender = async (req, res) => {
     res.render('login')
 }
 
-export const signupRender = async (req, res) => {
-    res.render('signup')
+export const signupSuccess = async (req, res) => {
+    res.render('signupsuccess', { name: req.user.name })
 }
 
 export const currentSessionRender = async (req, res) => {
     res.render('currentsession', { name: req.user.name })
+}
+
+export const errorRender = async (req, res) => {
+    res.render('error')
 }

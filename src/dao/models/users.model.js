@@ -14,11 +14,11 @@ const usersSchema = new Schema({
         type: String,
         required: true,
     },
-    isAdmin:{
-        type: Boolean,
-        default: false,
+    role:{
+        type: String,
+        default: 'user'
     },
-    isFromGithub:{
+    githubAuth:{
         type: Boolean,
         default: false,
     },
@@ -28,10 +28,6 @@ const usersSchema = new Schema({
         ref: 'Carts',
         },
         _id: false
-    },
-    role:{
-        type: String,
-        default: 'user'
     }
 })
 

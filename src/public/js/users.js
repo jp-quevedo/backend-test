@@ -7,7 +7,7 @@ const userIdUpdate = document.getElementById('userIdUpdate')
 const userNameUpdate = document.getElementById('userNameUpdate')
 const userEmailUpdate = document.getElementById('userEmailUpdate')
 const userPasswordUpdate = document.getElementById('userPasswordUpdate')
-const userIsAdminUpdate = document.getElementById('userIsAdminUpdate')
+const userRoleUpdate = document.getElementById('userRoleUpdate')
 const userCartUpdate = document.getElementById('userCartUpdate')
 
 // DELETE IMPORT
@@ -27,7 +27,7 @@ updateUserForm.onsubmit = (e) => {
         userNameUpdate.value == '' &&
         userEmailUpdate.value == '' &&
         userPasswordUpdate.value == '' &&
-        userIsAdminUpdate.value == '' &&
+        userRoleUpdate.value == '' &&
         userCartUpdate.value == ''
     ) {
         alert('Some data is missing!')
@@ -37,7 +37,7 @@ updateUserForm.onsubmit = (e) => {
             name: userNameUpdate.value,
             email: userEmailUpdate.value,
             password: userPasswordUpdate.value,
-            isAdmin: userIsAdminUpdate.value,
+            role: userRoleUpdate.value,
             cart: userCartUpdate.value
         }
         socketClient.emit('updateUser', newUserUpdate)
@@ -50,7 +50,7 @@ socketClient.on('userUpdated', (newUserUpdated) => {
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Is Admin</th>
+            <th>Role</th>
             <th>Cart Id</th>
         </tr>
     </thead>`
@@ -60,7 +60,7 @@ socketClient.on('userUpdated', (newUserUpdated) => {
             <td>${objUsers._id}</td>
             <td>${objUsers.name}</td>
             <td>${objUsers.email}</td>
-            <td>${objUsers.isAdmin}</td>
+            <td>${objUsers.role}</td>
             <td>${objUsers.usersCart}</td>
         </tr>`)
     usersTable.innerHTML = users
@@ -84,7 +84,7 @@ socketClient.on('userDeleted', (newUsersArray) => {
             <th>Id</th>
             <th>Name</th>
             <th>Email</th>
-            <th>Is Admin</th>
+            <th>Role</th>
             <th>Cart Id</th>
         </tr>
     </thead>`
@@ -94,7 +94,7 @@ socketClient.on('userDeleted', (newUsersArray) => {
             <td>${objUsers._id}</td>
             <td>${objUsers.name}</td>
             <td>${objUsers.email}</td>
-            <td>${objUsers.isAdmin}</td>
+            <td>${objUsers.role}</td>
             <td>${objUsers.usersCart}</td>
         </tr>`)
     usersTable.innerHTML = users

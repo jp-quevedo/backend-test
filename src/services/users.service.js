@@ -19,3 +19,13 @@ export const updateOne = ({ _id: id }, obj) => {
     const userUpdate = usersManager.updateOne({ _id: id }, obj)
     return userUpdate
 }
+
+export const emailFilter = (email) => {
+    const emailResponse = usersManager.findByEmail(email)
+    return emailResponse
+}
+
+export const githubFilter = (email) => {
+    const githubResponse = usersManager.findGithub(email)
+    return githubResponse
+}

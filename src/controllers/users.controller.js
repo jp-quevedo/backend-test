@@ -5,7 +5,7 @@ import {
     findById,
     deleteOne,
     updateOne,
-} from '../services/users.service.js'
+} from '../features/services/users.service.js'
 
 export const findUsers = async (req, res) => {
     const users = await findAll()

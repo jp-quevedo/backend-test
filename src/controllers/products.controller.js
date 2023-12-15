@@ -6,7 +6,7 @@ import {
     updateOne,
     productsFilter,
     aggregation
-} from '../services/products.service.js'
+} from '../features/services/products.service.js'
 
 export const findProducts = async (req, res) => {
     const products = await findAll()

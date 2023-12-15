@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import { __dirname } from '../utils.js'
 import { transporter } from '../nodemailer.js'
+import { userMiddleware } from '../middlewares/auth.middleware.js'
 import { 
     chatRender,
     messagePost
@@ -8,8 +9,8 @@ import {
 
 const router = Router()
 
-router.get('/chat', chatRender)
-router.post('/chat', messagePost)
+router.get('/chat', userMiddleware, chatRender)
+router.post('/chat', userMiddleware, messagePost)
 
 router.get('/mail', async (req, res) => {
     const options = {

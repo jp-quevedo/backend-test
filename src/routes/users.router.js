@@ -33,7 +33,7 @@ router.post('/signup', passport.authenticate('signup', {
 }))
 
 router.post('/login', passport.authenticate('login', {
-    successRedirect: '/api/currentsession',
+    successRedirect: '/api/users/current',
     failureRedirect: '/api/error'
 }))
 

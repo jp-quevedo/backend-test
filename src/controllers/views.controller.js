@@ -1,6 +1,7 @@
 import cartsManager from '../dao/managers/cartsManager.js'
 import productsManager from '../dao/managers/productsManager.js'
 import usersManager from '../dao/managers/usersManager.js'
+import UsersDTO from '../features/dto/users.dto.js'
 
 export const homeRender = async (req, res) => {
     const carts = await cartsManager.findCarts()
@@ -28,7 +29,9 @@ export const signupSuccess = async (req, res) => {
 }
 
 export const currentSessionRender = async (req, res) => {
-    res.render('currentsession', { name: req.user.name })
+    const usersDTO = new UsersDTO({...req.user.params})
+    console.log(usersDTO)
+    res.render('currentsession', usersDTO)
 }
 
 export const errorRender = async (req, res) => {

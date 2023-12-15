@@ -1,11 +1,12 @@
 import productsManager from '../dao/managers/productsManager.js'
+import ticketsManager from '../dao/managers/ticketsManager.js'
 import { 
     findAll,
     findById,
     createOne,
     deleteOne,
     updateOne
-} from '../services/carts.service.js'
+} from '../features/services/carts.service.js'
 
 export const findCarts = async (req, res) => {
     const carts = await findAll()
@@ -66,6 +67,25 @@ export const updateCart = async (req, res) => {
         } else {
             console.log(response)
             res.status(200).json({ message: 'Cart updated' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error })
+    }
+}
+
+export const purchaseCart = async (req, res) => {
+    const user = req.session.user
+    const purchaseAmount = await ticketsManager.priceCalculator()
+    if (!code || !purchaser || !purchase_datetime || !cart || !amount) {
+        return res.status(400).json({ message: 'Some data is missing' });
+    }
+    try {
+        if (user.usersCart.productsInCart.quantity < productsInCart.product.stock) {
+            const newTicket = await ticketsManager.generateTicket({ ...obj, purchaser: user._id, cart: user.usersCart, amount: purchaseAmount })
+            const newStock = await ticketsManager.stockCalculator()
+            res.status(200).json({ message: 'Ticket created', ticket: newTicket })
+        } else {
+            return res.status(400).json({ message: 'Sorry, there is not enough stock to procceed with your purchase, please try again with a smaller quantity'})
         }
     } catch (error) {
         res.status(500).json({ message: error })

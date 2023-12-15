@@ -1,4 +1,4 @@
-import usersManager from '../dao/managers/usersManager.js'
+import usersManager from '../../dao/managers/usersManager.js'
 
 export const findAll = () => {
     const users = usersManager.findAll()

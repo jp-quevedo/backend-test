@@ -205,11 +205,4 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// update user, logout, github, mail de registro
-
-
-// CAMBIO DE RED MATA CONEXION CON MONGO ATLAS
-// CARTS Y SESSION HANDLEBARS rep
-// MIDDLEWARE, ARCHIVOS SUELTOS, PASSPORT EN SERVICES?
-// ALGUNOS SERVICES NO SE JUSTIFICAN? 
-// MANEJO DE SOCKET, como implementar en otro archivos 
+// update user, logout, github, mail de registro, testear compra

@@ -1,18 +1,29 @@
-import { Schema, model } from 'mongoose'
+import { Schema, model, SchemaTypes } from 'mongoose'
 
 const ticketsSchema = new Schema({
     code: {
         type: String,
         unique: true,
-    },
-    purchase_datetime: {
-        type: String,
-    },
-    amount: {
-        type: Number,
+        required: true
     },
     purchaser: {
         type: String,
+        required: true
+    },
+    purchase_datetime: {
+        type: String,
+        required: true
+    },
+    cart:{
+        cart:{
+        type: SchemaTypes.ObjectId,
+        ref: 'Carts',
+        },
+        _id: false,
+    },
+    amount: {
+        type: Number,
+        required: true
     }
 })
 

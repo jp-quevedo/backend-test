@@ -3,6 +3,7 @@ import usersManager from '../dao/managers/usersManager.js'
 import { Strategy as localStrategy } from 'passport-local'
 import { Strategy as githubStrategy } from 'passport-github2'
 import { hashData, compareData } from '../utils.js'
+import UsersDTO from '../features/dto/users.dto.js'
 
 // LOCAL
 
@@ -18,10 +19,8 @@ passport.use('signup', new localStrategy(
                 return done(null, false)
             }
             const hashedPassword = await hashData(password)
-            const userCreated = await usersManager.createOne({
-                ...req.body,
-                password: hashedPassword,
-            })
+            const usersDTO = new UsersDTO({ ...req.body, password: hashedPassword })
+            const userCreated = await usersManager.createOne(usersDTO)
             done(null, userCreated)
         } catch (error) {
             done(error)

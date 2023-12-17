@@ -1,4 +1,5 @@
 import cookieParser from 'cookie-parser'
+import compression from 'express-compression'
 import express from 'express'
 import handlebars from 'express-handlebars'
 import MongoStore from 'connect-mongo'
@@ -18,12 +19,16 @@ import usersManager from './dao/managers/usersManager.js'
 
 import { __dirname } from './utils.js'
 import { Server } from 'socket.io'
+import { generateProduct } from './faker.js'
+import { ErrorMessages } from './middlewares/errors/error.enum.js'
+import CustomError from './middlewares/errors/custom.error.js'
 import config from './config/dotenv.config.js'
 import './config/db.config.js'
 import './config/passport.config.js'
 
 const app = express()
 const MONGO_URI = config.mongo_uri
+const KEY = config.secret_key
 const PORT = config.port
 
 app.use(cookieParser())
@@ -32,7 +37,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public'))
 
 app.use(session({
-    secret: 'supersecretkey',
+    secret: KEY,
     cookie: { maxAge: 60 * 60 * 1000 },
     store: new MongoStore({
         mongoUrl: MONGO_URI
@@ -46,6 +51,16 @@ app.use('/api/carts', cartsRouter)
 app.use('/api/messages', messagesRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/users', usersRouter)
+
+app.use(compression())
+app.get('/mockingproducts', (req, res) => {
+    const mock = []
+    for (let i = 0; i < 100; i++) {
+        const product = generateProduct()
+        mock.push(product)
+    }
+    res.send(mock)
+})
 
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
@@ -82,7 +97,7 @@ socketServer.on('connection', (socket) => {
             const newCartsArray = await cartsManager.findAll()
             socket.emit('cartUpdated', newCartsArray)
         } else {
-            return 'The cart requested does not exist'
+            return CustomError.createError(ErrorMessages.CART_NOT_FOUND)
         }
     })
 
@@ -96,7 +111,7 @@ socketServer.on('connection', (socket) => {
             const newPFCartsArray = await cartsManager.findAll()
             socket.emit('productFCDeleted', newPFCartsArray)
         } else {
-            return 'The cart requested does not exist'
+            return CustomError.createError(ErrorMessages.CART_NOT_FOUND)
         }
     })
     
@@ -108,7 +123,7 @@ socketServer.on('connection', (socket) => {
             const newCartsArray = await cartsManager.findAll()
             socket.emit('cartDeleted', newCartsArray)
         } else {
-            return 'The cart requested does not exist'
+            return CustomError.createError(ErrorMessages.CART_NOT_FOUND)
         }
     })
 
@@ -151,7 +166,7 @@ socketServer.on('connection', (socket) => {
             const newProductUpdated = await usersManager.findAll()
             socket.emit('productUpdated', newProductUpdated)
         } else {
-            return 'The product requested does not exist'
+            return CustomError.createError(ErrorMessages.PRODUCT_NOT_FOUND)
         }
     })
 
@@ -163,7 +178,7 @@ socketServer.on('connection', (socket) => {
             const newProductsArray = await productsManager.findAll()
             socket.emit('productDeleted', newProductsArray)
         } else {
-            return 'The product requested does not exist'
+            return CustomError.createError(ErrorMessages.PRODUCT_NOT_FOUND)
         }
     })
 
@@ -187,7 +202,7 @@ socketServer.on('connection', (socket) => {
             const newUsersUpdated = await usersManager.findAll()
             socket.emit('userUpdated', newUsersUpdated)
         } else {
-            return 'The user requested does not exist'
+            return CustomError.createError(ErrorMessages.USER_NOT_FOUND)
         }
     })
 
@@ -199,7 +214,7 @@ socketServer.on('connection', (socket) => {
             const newUsersArray = await usersManager.findAll()
             socket.emit('userDeleted', newUsersArray)
         } else {
-            return 'The user requested does not exist'
+            return CustomError.createError(ErrorMessages.USER_NOT_FOUND)
         }
     })
 

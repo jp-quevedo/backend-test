@@ -18,10 +18,12 @@ import productsManager from './dao/managers/productsManager.js'
 import usersManager from './dao/managers/usersManager.js'
 
 import { __dirname } from './utils.js'
-import { Server } from 'socket.io'
-import { generateProduct } from './faker.js'
 import { ErrorMessages } from './middlewares/errors/error.enum.js'
+import { generateProduct } from './faker.js'
+import { logger } from './winston.js'
+import { Server } from 'socket.io'
 import CustomError from './middlewares/errors/custom.error.js'
+
 import config from './config/dotenv.config.js'
 import './config/db.config.js'
 import './config/passport.config.js'
@@ -62,12 +64,22 @@ app.get('/mockingproducts', (req, res) => {
     res.send(mock)
 })
 
+app.get('/loggertest', (req, res) => {
+    logger.fatal('Fatal')
+    logger.error('Error')
+    logger.warning('Warning')
+    logger.info('Info')
+    logger.http('HTTP')
+    logger.debug('Debug')
+    res.send('Testing Winston')
+})
+
 app.engine('handlebars', handlebars.engine())
 app.set('view engine', 'handlebars')
 app.set('views', __dirname + '/views')
 
 const httpServer = app.listen(PORT, () => {
-    console.log(`Listening to port ${ PORT } with Express`)
+    logger.info(`Listening to port ${ PORT } with Express`)
 })
 
 const socketServer = new Server(httpServer)
@@ -220,4 +232,4 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// update user, logout, github, mail de registro, testear compra
+// update user, logout, github, mail de registro, testear compra, logger file

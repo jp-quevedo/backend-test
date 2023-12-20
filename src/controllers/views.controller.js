@@ -29,8 +29,7 @@ export const signupSuccess = async (req, res) => {
 }
 
 export const currentSessionRender = async (req, res) => {
-    const usersDTO = new UsersDTO({...req.user.params})
-    console.log(usersDTO)
+    const usersDTO = new UsersDTO({ name: req.user.name })
     res.render('currentsession', usersDTO)
 }
 

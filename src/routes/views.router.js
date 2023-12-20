@@ -17,4 +17,14 @@ router.get('/messages/signupsuccess', signupSuccess)
 router.get('/users/current', currentSessionRender)
 router.get('/error', errorRender)
 
+router.get('/logout', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            console.log('Error destroying session:', error)
+        } else {
+            res.redirect('/api/users/login')
+        }
+    })
+})
+
 export default router

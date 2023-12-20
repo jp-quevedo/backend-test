@@ -23,11 +23,11 @@ const usersTable = document.getElementById('usersTable')
 
 updateUserForm.onsubmit = (e) => {
     e.preventDefault()
-    if (userIdUpdate.value == '' &&
-        userNameUpdate.value == '' &&
-        userEmailUpdate.value == '' &&
-        userPasswordUpdate.value == '' &&
-        userRoleUpdate.value == '' &&
+    if (userIdUpdate.value == '' ||
+        userNameUpdate.value == '' ||
+        userEmailUpdate.value == '' ||
+        userPasswordUpdate.value == '' ||
+        userRoleUpdate.value == '' ||
         userCartUpdate.value == ''
     ) {
         alert('Some data is missing!')

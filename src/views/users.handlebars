@@ -4,6 +4,7 @@
         Id: <input type='text' name='name' id='userIdUpdate'>
         Name: <input type='text' name='name' id='userNameUpdate'>
         Email: <input type='email' name='email' id='userEmailUpdate'>
+        Password: <input type='password' name='password' id='userPasswordUpdate'>
         Role: <input type='text' name='role' id='userRoleUpdate'>
         Cart Id: <input type='text' name='cart' id='userCartUpdate'>
         <input type='submit' value='Update'>
@@ -37,7 +38,7 @@
                 <td>{{name}}</td>
                 <td>{{email}}</td>
                 <td>{{role}}</td>
-                <td>{{cart}}</td>
+                <td>{{usersCart.cart}}</td>
             </tr>
             {{/each}}
         </tbody>

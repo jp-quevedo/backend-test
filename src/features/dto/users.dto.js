@@ -1,8 +1,5 @@
-export default class UsersDTO {
+export default class usersDTO {
     constructor(obj) {
         this.name = obj.name
-        this.email = obj.email
-        this.password = obj.password
-        this.role = obj.role
     }
 }

@@ -15,16 +15,6 @@ router.get('/:_id', findUserById)
 router.delete('/:_id', deleteUser)
 router.put('/:_id', updateUser)
 
-router.get('/logout', (req, res) => {
-    req.session.destroy((error) => {
-        if (error) {
-            console.log('Error destroying session:', error)
-        } else {
-        res.redirect('/api/users/login')
-        }
-    })
-})
-
 // LOCAL
 
 router.post('/signup', passport.authenticate('signup', {

@@ -17,7 +17,7 @@ import chatsManager from './dao/managers/chatsManager.js'
 import productsManager from './dao/managers/productsManager.js'
 import usersManager from './dao/managers/usersManager.js'
 
-import { __dirname } from './utils.js'
+import { __dirname, hashData } from './utils.js'
 import { ErrorMessages } from './middlewares/errors/error.enum.js'
 import { generateProduct } from './faker.js'
 import { logger } from './winston.js'
@@ -119,7 +119,6 @@ socketServer.on('connection', (socket) => {
             const productIndex = findCart.productsInCart.findIndex(obj => obj.product == deletingProductId.product)
             findCart.productsInCart.splice(productIndex, 1)
             const updateSaved = await findCart.save()
-            console.log(updateSaved)
             const newPFCartsArray = await cartsManager.findAll()
             socket.emit('productFCDeleted', newPFCartsArray)
         } else {
@@ -131,7 +130,6 @@ socketServer.on('connection', (socket) => {
         const cart = await cartsManager.findById(cartDelete._id)
         if (cart) {
             const deletingCart = await cartsManager.deleteOne(cartDelete._id)
-            console.log(deletingCart)
             const newCartsArray = await cartsManager.findAll()
             socket.emit('cartDeleted', newCartsArray)
         } else {
@@ -174,7 +172,6 @@ socketServer.on('connection', (socket) => {
             updatingProduct.stock = newProductUpdate.stock,
             updatingProduct.category = newProductUpdate.category
             const productUpdateSaved = await updatingProduct.save()
-            console.log(productUpdateSaved)
             const newProductUpdated = await usersManager.findAll()
             socket.emit('productUpdated', newProductUpdated)
         } else {
@@ -186,7 +183,6 @@ socketServer.on('connection', (socket) => {
         const product = await productsManager.findById(newProductDelete._id)
         if (product) {
             const deletingProduct = await productsManager.deleteOne(newProductDelete._id)
-            console.log(deletingProduct)
             const newProductsArray = await productsManager.findAll()
             socket.emit('productDeleted', newProductsArray)
         } else {
@@ -203,14 +199,15 @@ socketServer.on('connection', (socket) => {
 
     socket.on('updateUser', async(newUserUpdate) => {
         const updatingUser = await usersManager.findById(newUserUpdate._id)
+        const newUsersCart = await cartsManager.findCartById(newUserUpdate.cart)
+        const hashedPassword = await hashData(newUserUpdate.password)
         if (updatingUser) {
             updatingUser.name = newUserUpdate.name,
             updatingUser.email = newUserUpdate.email,
-            updatingUser.password = newUserUpdate.password,
+            updatingUser.password = hashedPassword,
             updatingUser.role = newUserUpdate.role,
-            updatingUser.usersCart = newUserUpdate.usersCart
+            updatingUser.usersCart.cart = newUsersCart
             const updateSaved = await updatingUser.save()
-            console.log(updateSaved)
             const newUsersUpdated = await usersManager.findAll()
             socket.emit('userUpdated', newUsersUpdated)
         } else {
@@ -220,7 +217,6 @@ socketServer.on('connection', (socket) => {
 
     socket.on('deleteUser', async(newUserDelete) => {
         const deleteUser = await usersManager.findById(newUserDelete._id)
-        console.log(deleteUser)
         if (deleteUser) {
             const deletingUser = await usersManager.deleteOne(newUserDelete._id)
             const newUsersArray = await usersManager.findAll()
@@ -232,4 +228,7 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// update user, logout, github, mail de registro, testear compra, logger file
+// update user, objeto queda desordenado en mongo
+// logout, funciona en views router pero no en users
+
+// github, mail de registro, testear compra, logger file

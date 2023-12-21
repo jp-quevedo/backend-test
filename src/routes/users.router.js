@@ -10,10 +10,15 @@ import '../config/passport.config.js'
 
 const router = Router()
 
-router.get('/', findUsers)
-router.get('/:_id', findUserById)
-router.delete('/:_id', deleteUser)
-router.put('/:_id', updateUser)
+router.get('/logout', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            console.log('Error destroying session:', error)
+        } else {
+            res.redirect('/api/users/login')
+        }
+    })
+})
 
 // LOCAL
 
@@ -29,12 +34,14 @@ router.post('/login', passport.authenticate('login', {
 
 // GITHUB
 
-router.get('/auth/github', (req, res) => {
+router.get(
+    '/github', 
     passport.authenticate('github', { scope: ['user: email']}),
     async (req, res) => {}
-})
+)
 
-router.get('/github', (req, res) => {
+router.get(
+    '/auth/github',
     passport.authenticate('github', {
         failureRedirect: '/api/error'
     }),
@@ -42,6 +49,11 @@ router.get('/github', (req, res) => {
         req.session.user = req.user
         res.redirect('/api/users/current')
     }
-})
+)
+
+router.get('/', findUsers)
+router.get('/:_id', findUserById)
+router.delete('/:_id', deleteUser)
+router.put('/:_id', updateUser)
 
 export default router

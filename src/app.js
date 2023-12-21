@@ -228,7 +228,6 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// update user, objeto queda desordenado en mongo
-// logout, funciona en views router pero no en users
-
-// github, mail de registro, testear compra, logger file
+// update user, cart queda desordenado en mongo
+// mail de registro, no llega
+// testear compra,

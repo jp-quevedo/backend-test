@@ -54,7 +54,7 @@ passport.use('github', new githubStrategy(
     {
         clientID: 'Iv1.e979cc04ca7e3dac',
         clientSecret: '74af7b2e55e2f1e30529accbadc066d252ba3a5e',
-        callbackURL: 'http://localhost:8080/api/users/github',
+        callbackURL: 'http://localhost:8080/api/users/auth/github',
         scope: ['user:email']
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -62,10 +62,12 @@ passport.use('github', new githubStrategy(
         try {
             const userInDB = await usersManager.findGithub({ email: profile.emails[0].value })
             if (!userInDB) {
+                const pass = '1234'
+                const hashedPassword = await hashData(pass)
                 const newUser = {
                     name: profile._json.name,
                     email: profile.emails[0].value,
-                    password: '1234',
+                    password: hashedPassword,
                     githubAuth: true
                 }
                 const response = await usersManager.createOne(newUser)
@@ -85,7 +87,7 @@ passport.use('github', new githubStrategy(
 
 // SERIALIZACION
 
-passport.serializeUser(function (user, done) {
+passport.serializeUser((user, done) => {
     done(null, user._id)
 })
 

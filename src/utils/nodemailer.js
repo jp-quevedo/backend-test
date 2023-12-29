@@ -1,4 +1,4 @@
-import config from './config/dotenv.config.js'
+import config from '../config/dotenv.config.js'
 import nodemailer from 'nodemailer'
 
 export const transporter = nodemailer.createTransport({

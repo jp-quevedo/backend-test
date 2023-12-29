@@ -1,5 +1,5 @@
 import { cartsModel } from '../models/carts.model.js'
-import BasicManager from './basicManager.js'
+import BasicManager from './basic.manager.js'
 
 class CartsManager extends BasicManager {
 

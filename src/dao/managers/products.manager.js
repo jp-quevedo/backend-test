@@ -1,5 +1,5 @@
 import { productsModel } from '../models/products.model.js'
-import BasicManager from './basicManager.js'
+import BasicManager from './basic.manager.js'
 
 class ProductsManager extends BasicManager{
 

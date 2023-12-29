@@ -1,8 +1,10 @@
 import passport from 'passport'
-import usersManager from '../dao/managers/usersManager.js'
+import usersManager from '../dao/managers/users.manager.js'
 import { Strategy as localStrategy } from 'passport-local'
 import { Strategy as githubStrategy } from 'passport-github2'
-import { hashData, compareData } from '../utils.js'
+import { hashData, compareData } from '../utils/utils.js'
+import { logger } from '../utils/winston.js'
+import { transporter } from '../utils/nodemailer.js'
 
 // LOCAL
 
@@ -14,12 +16,21 @@ passport.use('signup', new localStrategy(
     async (req, email, password, done) => {
         try {
             const userInDB = await usersManager.findByEmail(email)
-            if (userInDB) {
+            if (!userInDB) {
+                const hashedPassword = await hashData(password)
+                const userCreated = await usersManager.createOne({ ...req.body, password: hashedPassword })
+                const { name, email } = userCreated
+                const options = {
+                    from: 'quevedo.jpg@gmail.com',
+                    to: userCreated.email,
+                    subject: 'signup',
+                    html: `<h1>welcome ${ userCreated.name }</h1>`,
+                }
+                await transporter.sendMail(options)
+                done(null, userCreated)
+            } else {
                 return done(null, false)
             }
-            const hashedPassword = await hashData(password)
-            const userCreated = await usersManager.createOne({ ...req.body, password: hashedPassword })
-            done(null, userCreated)
         } catch (error) {
             done(error)
         }
@@ -58,7 +69,7 @@ passport.use('github', new githubStrategy(
         scope: ['user:email']
     },
     async (accessToken, refreshToken, profile, done) => {
-        console.log(profile.emails[0].value)
+        logger.info(profile.emails[0].value)
         try {
             const userInDB = await usersManager.findGithub({ email: profile.emails[0].value })
             if (!userInDB) {

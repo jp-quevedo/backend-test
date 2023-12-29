@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { __dirname } from '../utils.js'
-import { transporter } from '../nodemailer.js'
+import { __dirname } from '../utils/utils.js'
 import { userMiddleware } from '../middlewares/auth.middleware.js'
 import { 
     chatRender,
@@ -27,14 +26,6 @@ router.get('/mail', async (req, res) => {
 })
 
 router.get('/signupsuccess', async (req, res) => {
-    const { name, email } = req.body
-    const options = {
-        from: 'quevedo.jpg@gmail.com',
-        to: email,
-        subject: 'signup',
-        html: `<h1>welcome ${ name }</h1>`,
-    }
-    await transporter.sendMail(options)
     res.send('signup success')
 })
 

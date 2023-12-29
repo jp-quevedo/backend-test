@@ -1,5 +1,5 @@
 import { usersModel } from '../models/users.model.js'
-import BasicManager from './basicManager.js'
+import BasicManager from './basic.manager.js'
 
 class UsersManager extends BasicManager{
 
@@ -17,7 +17,7 @@ class UsersManager extends BasicManager{
     }
 
     async findGithub(email){
-        const response = await usersModel.findOne(email)
+        const response = await usersModel.findOne({ email })
         if (!response) {
             return console.log('User not found')
         } else {

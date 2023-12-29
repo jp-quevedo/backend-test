@@ -1,5 +1,5 @@
-import productsManager from '../dao/managers/productsManager.js'
-import ticketsManager from '../dao/managers/ticketsManager.js'
+import productsManager from '../dao/managers/products.manager.js'
+import ticketsManager from '../dao/managers/tickets.manager.js'
 import { 
     findAll,
     findById,
@@ -65,7 +65,6 @@ export const updateCart = async (req, res) => {
         if (!response) {
             res.status(400).json({ message: 'Could not find any cart with the id sent' })
         } else {
-            console.log(response)
             res.status(200).json({ message: 'Cart updated' })
         }
     } catch (error) {

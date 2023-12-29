@@ -1,6 +1,6 @@
-import BasicManager from './basicManager.js'
+import BasicManager from './basic.manager.js'
 import { ticketsModel } from '../models/tickets.model.js'
-import { hashData } from '../../utils.js'
+import { hashData } from '../../utils/utils.js'
 
 class TicketsManager extends BasicManager {
 

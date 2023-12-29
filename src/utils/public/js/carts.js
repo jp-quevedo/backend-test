@@ -52,7 +52,10 @@ updateCartForm.onsubmit = (e) => {
     if (updatingCartId.value == '' ||
         productsInAddP.value == ''
     ) {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         socketClient.emit('updateCart', { _id: updatingCartId.value }, { product: productsInAddP.value, quantity: 1 })
     }
@@ -81,7 +84,10 @@ deletePFCartForm.onsubmit = (e) => {
     if (deletePFCartId.value == '' ||
     deletingProduct.value == ''
     ) {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         socketClient.emit('deletePFCart', { _id: deletePFCartId.value }, { product: deletingProduct.value, quantity: 1 })
     }
@@ -108,7 +114,10 @@ socketClient.on('productFCDeleted', (newPFCartsArray) => {
 deleteCartForm.onsubmit = (e) => {
     e.preventDefault()
     if (deletingCartId.value == '') {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         const cartDelete = { _id: deletingCartId.value }
         socketClient.emit('deleteCart', cartDelete)

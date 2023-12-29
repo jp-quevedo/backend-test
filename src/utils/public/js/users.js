@@ -30,7 +30,10 @@ updateUserForm.onsubmit = (e) => {
         userRoleUpdate.value == '' ||
         userCartUpdate.value == ''
     ) {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         const newUserUpdate = {
             _id: userIdUpdate.value,
@@ -71,7 +74,10 @@ socketClient.on('userUpdated', (newUserUpdated) => {
 deleteUserForm.onsubmit = (e) => {
     e.preventDefault()
     if (deletingUserId.value == '') {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         const newUserDelete = { _id: deletingUserId.value }
     socketClient.emit('deleteUser', newUserDelete)

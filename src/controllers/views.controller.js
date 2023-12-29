@@ -1,6 +1,6 @@
-import cartsManager from '../dao/managers/cartsManager.js'
-import productsManager from '../dao/managers/productsManager.js'
-import usersManager from '../dao/managers/usersManager.js'
+import cartsManager from '../dao/managers/carts.manager.js'
+import productsManager from '../dao/managers/products.manager.js'
+import usersManager from '../dao/managers/users.manager.js'
 import UsersDTO from '../features/dto/users.dto.js'
 
 export const homeRender = async (req, res) => {

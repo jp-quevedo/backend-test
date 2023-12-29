@@ -12,15 +12,15 @@ import messagesRouter from './routes/messages.router.js'
 import productsRouter from './routes/products.router.js'
 import usersRouter from './routes/users.router.js'
 
-import cartsManager from './dao/managers/cartsManager.js'
-import chatsManager from './dao/managers/chatsManager.js'
-import productsManager from './dao/managers/productsManager.js'
-import usersManager from './dao/managers/usersManager.js'
+import cartsManager from './dao/managers/carts.manager.js'
+import chatsManager from './dao/managers/chats.manager.js'
+import productsManager from './dao/managers/products.manager.js'
+import usersManager from './dao/managers/users.manager.js'
 
-import { __dirname, hashData } from './utils.js'
+import { __dirname, hashData } from './utils/utils.js'
 import { ErrorMessages } from './middlewares/errors/error.enum.js'
-import { generateProduct } from './faker.js'
-import { logger } from './winston.js'
+import { generateProduct } from './utils/faker.js'
+import { logger } from './utils/winston.js'
 import { Server } from 'socket.io'
 import CustomError from './middlewares/errors/custom.error.js'
 
@@ -95,16 +95,28 @@ socketServer.on('connection', (socket) => {
 
     socket.on('updateCart', async (updatingCartId, productsInAddP) => {
         const findUpdatingCart = await cartsManager.findById(updatingCartId._id)
+        const productValidation = await productsManager.findById(productsInAddP.product._id)
         if (findUpdatingCart) {
             const { productsInCart } = findUpdatingCart
             const productIndex = findUpdatingCart.productsInCart.findIndex((p) => 
                 p.product.equals(productsInAddP.product))
-                if (productIndex === -1) {
-                    findUpdatingCart.productsInCart.push(productsInAddP)
-                    findUpdatingCart.save()
+                if (productsInAddP.product.quantity > productValidation.stock) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'We ran out of stock, please try again later!',
+                      })
                 } else {
-                    findUpdatingCart.productsInCart[productIndex].quantity++
-                    findUpdatingCart.save()
+                    if (productIndex === -1) {
+                        findUpdatingCart.productsInCart.push(productsInAddP)
+                        findUpdatingCart.save()
+                        productValidation.stock =-1
+                        productValidation.save()
+                    } else {
+                        findUpdatingCart.productsInCart[productIndex].quantity++
+                        findUpdatingCart.save()
+                        productValidation.stock =-1
+                        productValidation.save()
+                    }
                 }
             const newCartsArray = await cartsManager.findAll()
             socket.emit('cartUpdated', newCartsArray)
@@ -139,10 +151,10 @@ socketServer.on('connection', (socket) => {
 
     // CHAT
 
-    console.log(`Client connected with id ${ socket.id }`)
+    logger.info(`Client connected with id ${ socket.id }`)
 
     socket.on('disconnect', () => {
-        console.log(`Client disconnected with id ${ socket.id }`)
+        logger.info(`Client disconnected with id ${ socket.id }`)
     })
 
     socket.on('newChatUser', (userEmail) => {
@@ -229,5 +241,4 @@ socketServer.on('connection', (socket) => {
 })
 
 // update user, cart queda desordenado en mongo
-// mail de registro, no llega
 // testear compra,

@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { logger } from '../utils/winston.js'
 import { 
     findUsers,
     findUserById,
@@ -13,7 +14,7 @@ const router = Router()
 router.get('/logout', (req, res) => {
     req.session.destroy((error) => {
         if (error) {
-            console.log('Error destroying session:', error)
+            logger.error('Error destroying session:', error)
         } else {
             res.redirect('/api/users/login')
         }

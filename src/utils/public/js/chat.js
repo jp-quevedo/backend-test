@@ -34,7 +34,10 @@ chatForm.onsubmit = (e) => {
         message: inputMessage.value
     }
     if (!inputMessage.value) {
-        return alert('Say something!')
+        return Swal.fire({
+            icon: 'error',
+            title: 'Say something!',
+          })
     } else {
         socketClient.emit('chatMessage', infoMessage)
     }

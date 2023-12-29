@@ -20,10 +20,6 @@ const ticketsSchema = new Schema({
         ref: 'Carts',
         },
         _id: false,
-    },
-    amount: {
-        type: Number,
-        required: true
     }
 })
 

@@ -1,5 +1,5 @@
-import cartsManager from '../dao/managers/cartsManager.js'
-import productsManager from '../dao/managers/productsManager.js'
+import cartsManager from '../dao/managers/carts.manager.js'
+import productsManager from '../dao/managers/products.manager.js'
 import { 
     findAll,
     findById,

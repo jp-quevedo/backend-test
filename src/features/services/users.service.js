@@ -1,4 +1,5 @@
-import usersManager from '../../dao/managers/usersManager.js'
+import usersManager from '../../dao/managers/users.manager.js'
+import { transporter } from '../../utils/nodemailer.js'
 
 export const findAll = () => {
     const users = usersManager.findAll()
@@ -8,6 +9,11 @@ export const findAll = () => {
 export const findById = (_id) => {
     const user = usersManager.findById(_id)
     return user
+}
+
+export const createOne = (obj) => {
+    const newUser = usersManager.createOne(obj)
+    return newUser
 }
 
 export const deleteOne = (_id) => {

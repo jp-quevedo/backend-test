@@ -37,15 +37,18 @@ const rtpTable = document.getElementById('rtpTable')
 createForm.onsubmit = (e) => {
     e.preventDefault()
     if (
-        productTitle.value == '' &&
-        productDescription.value == '' &&
-        productCode.value == '' &&
-        productPrice.value == '' &&
-        productStatus.value == '' &&
-        productStock.value == '' &&
+        productTitle.value == '' ||
+        productDescription.value == '' ||
+        productCode.value == '' ||
+        productPrice.value == '' ||
+        productStatus.value == '' ||
+        productStock.value == '' ||
         productCategory.value == ''
         ) {
-        alert('Some data is missing!')
+            Swal.fire({
+                icon: 'error',
+                title: 'Some data is missing!',
+              })
     } else {
         const newProduct = {
             title: productTitle.value,
@@ -81,16 +84,19 @@ socketClient.on('productCreated', (creatingProduct) => {
 
 updateProductForm.onsubmit = (e) => {
     e.preventDefault()
-    if (productIdUpdate.value == '' &&
-        productTitleUpdate.value == '' &&
-        productDescriptionUpdate.value == '' &&
-        productCodeUpdate.value == '' &&
-        productPriceUpdate.value == '' &&
-        productStatusUpdate.value == '' &&
-        productStockUpdate.value == '' &&
+    if (productIdUpdate.value == '' ||
+        productTitleUpdate.value == '' ||
+        productDescriptionUpdate.value == '' ||
+        productCodeUpdate.value == '' ||
+        productPriceUpdate.value == '' ||
+        productStatusUpdate.value == '' ||
+        productStockUpdate.value == '' ||
         productCategoryUpdate.value == ''
     ) {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         const newProductUpdate = {
             _id: productIdUpdate.value,
@@ -139,7 +145,10 @@ socketClient.on('productUpdated', (newProductUpdated) => {
 deleteForm.onsubmit = (e) => {
     e.preventDefault()
     if (deletingProductId.value == '') {
-        alert('Some data is missing!')
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
     } else {
         const newProductDelete = { _id: deletingProductId.value }
     socketClient.emit('deleteProduct', newProductDelete)

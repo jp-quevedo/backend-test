@@ -1,15 +1,17 @@
 export const adminMiddleware = (req, res, next)=>{
-    const { role } = req.body
-    if(role != 'admin'){
+    const user = { ...req.session.user }
+    if (user.role == 'admin') {
+        next()
+    } else {
         return res.send('Unauthorized')
     }
-    next()
 }
 
 export const userMiddleware = (req, res, next)=>{
-    const { role } = req.body
-    if(role != 'user'){
+    const user = { ...req.session.user }
+    if (user.role == 'user') {
+        next()
+    } else {
         return res.send('Unauthorized')
     }
-    next()
 }

@@ -23,6 +23,11 @@ const deletingProduct = document.getElementById('deletingProduct')
 const deleteCartForm = document.getElementById('deleteCartForm')
 const deletingCartId = document.getElementById('deletingCartId')
 
+// PURCHASE IMPORT
+
+const purchaseCartForm = document.getElementById('purchaseCartForm')
+const purchasingCartId = document.getElementById('purchasingCartId')
+
 // TABLE IMPORT
 
 const cTable = document.getElementById('cTable')
@@ -31,7 +36,7 @@ const cTable = document.getElementById('cTable')
 
 createCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('createCart', )
+    socketClient.emit('createCart')
 }
 
 socketClient.on('cartCreated', (creatingCart) => {
@@ -138,4 +143,27 @@ socketClient.on('cartDeleted', (newCartsArray) => {
             <td>${objCarts.productsInCart}</td>
         </tr>`)
     cTable.innerHTML = carts
+})
+
+// PURCHASE EVENT
+
+createCartForm.onsubmit = (e) => {
+    e.preventDefault()
+    socketClient.emit('purchaseCart')
+}
+
+socketClient.on('cartPurchased', (purchasingCart) => {
+    const { _id, code, purchaser, date, products } = purchasingCart
+    const purchaseRow = `
+        <tr>
+            <td>${_id}</td>
+            <td>${code}</td>
+            <td>${purchaser}</td>
+            <td>${date}</td>
+            <td>${products.title}</td>
+            <td>${products.price}</td>
+            <td>${products.quantity}</td>
+        </tr>
+    `
+    ticketsTable.innerHTML += purchaseRow
 })

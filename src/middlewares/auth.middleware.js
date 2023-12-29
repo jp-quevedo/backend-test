@@ -15,3 +15,12 @@ export const userMiddleware = (req, res, next)=>{
         return res.send('Unauthorized')
     }
 }
+
+export const premiumMiddleware = (req, res, next)=>{
+    const user = { ...req.session.user }
+    if (user.role == 'premium' || 'admin') {
+        next()
+    } else {
+        return res.send('Unauthorized')
+    }
+}

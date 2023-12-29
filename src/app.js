@@ -16,6 +16,7 @@ import cartsManager from './dao/managers/carts.manager.js'
 import chatsManager from './dao/managers/chats.manager.js'
 import productsManager from './dao/managers/products.manager.js'
 import usersManager from './dao/managers/users.manager.js'
+import ticketsManager from './dao/managers/tickets.manager.js'
 
 import { __dirname, hashData } from './utils/utils.js'
 import { ErrorMessages } from './middlewares/errors/error.enum.js'
@@ -149,6 +150,11 @@ socketServer.on('connection', (socket) => {
         }
     })
 
+    socket.on('purchaseCart', async() => {
+        const purchasingCart = await ticketsManager.generateTicket()
+        socket.emit('cartPurchased', purchasingCart)
+    })
+
     // CHAT
 
     logger.info(`Client connected with id ${ socket.id }`)
@@ -238,7 +244,36 @@ socketServer.on('connection', (socket) => {
         }
     })
 
+    socket.on('requestNewPass', async(newCodeRequest) => {
+        const codeRequest = await hashData(math.random())
+        const request = {
+            from: 'quevedo.jpg@gmail.com',
+            to: newCodeRequest.email,
+            subject: 'new password request',
+            text: `In order to reset your password you have to validate your mail by returning the following code into our website: ${codeRequest}`
+        }
+        await transporter.sendMail(request)
+        res.send('sending mail')
+        socket.emit('codeRequested')
+    })
+
+    socket.on('resetOldPass', async(newPassValidation) => {
+        const user = await usersManager.findByEmail(newPassValidation.email)
+        const code = await compareData(newPassValidation.code, codeRequest)
+        const newPassword = await hashData(newPassValidation.password)
+        if ( !user || !code ) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Some data is not correct, try again!',
+              })
+        } else {
+            user.password = newPassword
+            const newPassSaved = await user.save()
+            socket.emit('passResetOk')
+        }
+    })
+
 })
 
 // update user, cart queda desordenado en mongo
-// testear compra,
+// entrega 16 (test compra) y 19 (middlewares y password reset),

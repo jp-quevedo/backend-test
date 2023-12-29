@@ -42,12 +42,16 @@ export const createProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     const { _id: id } = req.params
+    const user = req.session.user
     try {
-        const response = await deleteOne(id, req.body)
-        if (response === -1) {
-            res.status(400).json({ message: 'Could not find any product with the id sent' })
-        } else {
-            res.status(200).json({ message: 'Product deleted' })
+        const product = await findById(id)
+        if (user.email == product.owner.email || user.role == 'admin') {
+            const response = await deleteOne(id, req.body)
+            if (response === -1) {
+                res.status(400).json({ message: 'Could not find any product with the id sent' })
+            } else {
+                res.status(200).json({ message: 'Product deleted' })
+            }
         }
     } catch (error) {
         res.status(500).json({ message: error })

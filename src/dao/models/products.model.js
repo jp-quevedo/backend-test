@@ -1,5 +1,5 @@
 import mongoosePaginate from 'mongoose-paginate-v2'
-import { Schema, model } from 'mongoose'
+import { Schema, SchemaTypes, model } from 'mongoose'
 
 const productsSchema = new Schema({
     title:{
@@ -31,6 +31,14 @@ const productsSchema = new Schema({
         type: String,
         required: true,
     },
+    owner:{
+        email:{
+            type: String,
+            ref: 'Users',
+            default: 'admin@admin.com'
+        },
+        _id: false
+    }
 })
 
 productsSchema.plugin(mongoosePaginate)

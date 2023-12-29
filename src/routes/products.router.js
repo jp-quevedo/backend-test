@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { adminMiddleware } from '../middlewares/auth.middleware.js'
+import { premiumMiddleware, adminMiddleware } from '../middlewares/auth.middleware.js'
 import { upload } from '../middlewares/multer.middleware.js'
 import {
     findProducts,
@@ -15,7 +15,7 @@ const router = Router()
 
 router.get('/', findProducts)
 router.get('/:_id', findProductById)
-router.post('/', adminMiddleware, upload.single('productimage.jpeg'), createProduct)
+router.post('/', premiumMiddleware, upload.single('productimage.jpeg'), createProduct)
 router.delete('/:_id', adminMiddleware, deleteProduct)
 router.put('/:_id', adminMiddleware, updateProduct)
 router.get('/filter', filterProducts)

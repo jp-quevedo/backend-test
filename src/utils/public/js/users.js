@@ -15,6 +15,15 @@ const userCartUpdate = document.getElementById('userCartUpdate')
 const deleteUserForm = document.getElementById('deleteUserForm')
 const deletingUserId = document.getElementById('deletingUserId')
 
+// RESET IMPORT
+
+const resetPassForm = document.getElementById('resetPassForm')
+const resetPassReqForm = document.getElementById('resetPassReqForm')
+const resetPassRequest = document.getElementById('resetPassRequest')
+const resetPassEmail = document.getElementById('resetPassEmail')
+const resetPassCode = document.getElementById('resetPassCode')
+const resetPass = document.getElementById('resetPass')
+
 // TABLE IMPORT
 
 const usersTable = document.getElementById('usersTable')
@@ -105,3 +114,46 @@ socketClient.on('userDeleted', (newUsersArray) => {
         </tr>`)
     usersTable.innerHTML = users
 })
+
+// REQUEST EVENT
+
+resetPassReqForm.onsubmit = (e) => {
+    e.preventDefault()
+    if (resetPassRequest.value == '') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
+    } else {
+        const newCodeRequest = {
+            email: resetPassRequest.value,
+        }
+        socketClient.emit('requestNewPass', newCodeRequest)
+    }
+}
+
+socketClient.on('codeRequested', Swal.fire('Code sent!'))
+
+// RESET EVENT
+
+resetPassForm.onsubmit = (e) => {
+    e.preventDefault()
+    if (resetPassEmail.value == '' ||
+        resetPassCode.value == '' ||
+        resetPass.value == ''
+    ) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
+    } else {
+        const newPassValidation = {
+            email: resetPassEmail.value,
+            code: resetPassCode.value,
+            password: resetPass.value
+        }
+        socketClient.emit('resetOldPass', newPassValidation)
+    }
+}
+
+socketClient.on('passResetOk', Swal.fire('New password saved!'))

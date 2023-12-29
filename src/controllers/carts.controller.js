@@ -60,12 +60,15 @@ export const deleteCart = async (req, res) => {
 export const updateCart = async (req, res) => {
     const cartCond = { _id: req.params.id }
     const prodCond = [{ _id: req.body.productsInCart }]
+    const user = req.session.user
     try {
-        const response = await updateOne(cartCond, prodCond)
-        if (!response) {
-            res.status(400).json({ message: 'Could not find any cart with the id sent' })
-        } else {
-            res.status(200).json({ message: 'Cart updated' })
+        if (user.email != prodCond.owner) {
+            const response = await updateOne(cartCond, prodCond)
+            if (!response) {
+                res.status(400).json({ message: 'Could not find any cart with the id sent' })
+            } else {
+                res.status(200).json({ message: 'Cart updated' })
+            }
         }
     } catch (error) {
         res.status(500).json({ message: error })
@@ -80,7 +83,7 @@ export const purchaseCart = async (req, res) => {
     }
     try {
         if (user.usersCart.productsInCart.quantity < productsInCart.product.stock) {
-            const newTicket = await ticketsManager.generateTicket({ ...obj, purchaser: user._id, cart: user.usersCart, amount: purchaseAmount })
+            const newTicket = await ticketsManager.generateTicket({ ...obj, purchaser: user._id, cart: user.usersCart })
             const newStock = await ticketsManager.stockCalculator()
             res.status(200).json({ message: 'Ticket created', ticket: newTicket })
         } else {

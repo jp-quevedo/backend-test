@@ -56,5 +56,6 @@ router.get('/', findUsers)
 router.get('/:_id', findUserById)
 router.delete('/:_id', deleteUser)
 router.put('/:_id', updateUser)
+router.get('/reset', async (req, res) => { res.render('reset') })
 
 export default router

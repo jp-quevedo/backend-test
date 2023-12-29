@@ -61,3 +61,17 @@ export const updateUser = async (req, res) => {
         res.status(500).json({ message: error })
     }
 }
+
+export const resetPassword = async (req, res) => {
+    const options = {
+        from: 'quevedo.jpg@gmail.com',
+        to: [
+            'jpablo58@live.cl'
+        ],
+        subject: 'nodemailer test',
+        text: 'first mail sent through nodemailer',
+        attachments: [{ path: __dirname + '/public/images/polo.jpeg' }]
+    }
+    await transporter.sendMail(options)
+    res.send('sending mail')
+}

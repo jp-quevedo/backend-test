@@ -17,9 +17,10 @@ const deletingUserId = document.getElementById('deletingUserId')
 
 // RESET IMPORT
 
-const resetPassForm = document.getElementById('resetPassForm')
 const resetPassReqForm = document.getElementById('resetPassReqForm')
 const resetPassRequest = document.getElementById('resetPassRequest')
+
+const resetPassForm = document.getElementById('resetPassForm')
 const resetPassEmail = document.getElementById('resetPassEmail')
 const resetPassCode = document.getElementById('resetPassCode')
 const resetPass = document.getElementById('resetPass')
@@ -89,7 +90,7 @@ deleteUserForm.onsubmit = (e) => {
           })
     } else {
         const newUserDelete = { _id: deletingUserId.value }
-    socketClient.emit('deleteUser', newUserDelete)
+        socketClient.emit('deleteUser', newUserDelete)
     }
 }
 
@@ -123,11 +124,9 @@ resetPassReqForm.onsubmit = (e) => {
         Swal.fire({
             icon: 'error',
             title: 'Some data is missing!',
-          })
+          }) 
     } else {
-        const newCodeRequest = {
-            email: resetPassRequest.value,
-        }
+        const newCodeRequest = { email: resetPassRequest.value }
         socketClient.emit('requestNewPass', newCodeRequest)
     }
 }

@@ -76,9 +76,14 @@ export const updateCart = async (req, res) => {
 }
 
 export const purchaseCart = async (req, res) => {
-    const user = req.session.user
+    const user = req.session.passport.user
+    //importar manager buscar user... 
+    //verificar cart vacio... 
+    //importar manager de products traer todos los products (mandar params)
+    //crear funcion para verificar stock recibir como params los products (recorrer stock del cart contra db)...
+    //pasar carro por params al pcalculator
     const purchaseAmount = await ticketsManager.priceCalculator()
-    if (!code || !purchaser || !purchase_datetime || !cart || !amount) {
+    if (!code || !purchaser || !purchase_datetime || !cart ) {
         return res.status(400).json({ message: 'Some data is missing' });
     }
     try {

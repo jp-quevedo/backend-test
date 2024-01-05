@@ -33,6 +33,14 @@ export const currentSessionRender = async (req, res) => {
     res.render('currentsession', usersDTO)
 }
 
+export const requestRender = async (req, res) => {
+    res.render('request')
+}
+
+export const resetRender = async (req, res) => {
+    res.render('reset')
+}
+
 export const errorRender = async (req, res) => {
     res.render('error')
 }

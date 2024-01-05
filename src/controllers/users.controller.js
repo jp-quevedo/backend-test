@@ -1,11 +1,14 @@
 import cartsManager from '../dao/managers/carts.manager.js'
 import productsManager from '../dao/managers/products.manager.js'
+import usersManager from '../dao/managers/users.manager.js'
 import { 
     findAll,
     findById,
     deleteOne,
-    updateOne,
+    updateOne
 } from '../features/services/users.service.js'
+import { transporter } from '../utils/nodemailer.js'
+import { hashData } from '../utils/utils.js'
 
 export const findUsers = async (req, res) => {
     const users = await findAll()
@@ -34,20 +37,6 @@ export const findUserById = async (req, res) => {
     }
 }
 
-export const deleteUser = async (req, res) => {
-    const { _id: id } = req.params
-    try {
-        const response = await deleteOne(id, req.body)
-        if (response === -1) {
-            res.status(400).json({ message: 'Could not find any user with the id sent' })
-        } else {
-            res.status(200).json({ message: 'User deleted' })
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
-}
-
 export const updateUser = async (req, res) => {
     const { _id: id } = req.params
     try {
@@ -62,16 +51,71 @@ export const updateUser = async (req, res) => {
     }
 }
 
-export const resetPassword = async (req, res) => {
-    const options = {
-        from: 'quevedo.jpg@gmail.com',
-        to: [
-            'jpablo58@live.cl'
-        ],
-        subject: 'nodemailer test',
-        text: 'first mail sent through nodemailer',
-        attachments: [{ path: __dirname + '/public/images/polo.jpeg' }]
+export const deleteUser = async (req, res) => {
+    const { _id: id } = req.params
+    try {
+        const response = await deleteOne(id, req.body)
+        if (response === -1) {
+            res.status(400).json({ message: 'Could not find any user with the id sent' })
+        } else {
+            res.status(200).json({ message: 'User deleted' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error })
     }
-    await transporter.sendMail(options)
-    res.send('sending mail')
+}
+
+export const requestPassword = async (req, res) => {
+    try {
+        function code(length) {
+            let result = ''
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            const charactersLength = characters.length
+            let counter = 0
+            while (counter < length) {
+              result += characters.charAt(Math.floor(Math.random() * charactersLength))
+              counter += 1
+            }
+            return result
+        }
+        const codeRequest = await code(6)
+        const { ...resetPassRequest } = req.body
+        const email = resetPassRequest
+        const user = await usersManager.findByEmail(email.resetPassRequest)
+        if (user) {
+            user.token = codeRequest
+            const tokenSaved = await user.save()
+            const request = {
+                from: 'quevedo.jpg@gmail.com',
+                to: user.email,
+                subject: 'new password request',
+                text: `In order to reset your password you have to validate your mail by returning the following code into our website: ${codeRequest}`
+            }
+            await transporter.sendMail(request)
+            res.render('reset')
+        } else {
+            res.status(400).json({ message: 'Could not find any user with the id sent' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error })
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    try {
+        const { ...dataRequested } = req.body
+        const usersInfo = dataRequested
+        const userComp = await usersManager.findByEmail(usersInfo.email)
+        if (userComp) {
+            if (userComp.token == usersInfo.code) {
+                userComp.password = await hashData(usersInfo.password)
+                const newPassSaved = await userComp.save()
+                res.render('login')
+            }
+        } else {
+            res.status(400).json({ message: 'Could not find any user with the id sent' })
+        }
+    } catch (error) {
+        res.status(500).json({ message: error })
+    }
 }

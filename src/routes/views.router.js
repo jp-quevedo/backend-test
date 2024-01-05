@@ -5,16 +5,20 @@ import {
     loginRender,
     signupSuccess,
     currentSessionRender,
+    requestRender,
+    resetRender,
     errorRender
 } from '../controllers/views.controller.js'
 
 const router = Router()
 
 router.get('/home', homeRender)
-router.get('/users/signup', signupRender)
-router.get('/users/login', loginRender)
+router.get('/users/request', requestRender)
+router.get('/users/reset', resetRender)
+router.get('/sessions/signup', signupRender)
+router.get('/sessions/login', loginRender)
 router.get('/messages/signupsuccess', signupSuccess)
-router.get('/users/current', currentSessionRender)
+router.get('/sessions/current', currentSessionRender)
 router.get('/error', errorRender)
 
 export default router

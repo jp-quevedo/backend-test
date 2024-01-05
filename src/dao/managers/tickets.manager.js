@@ -15,7 +15,6 @@ class TicketsManager extends BasicManager {
                 purchaser = user._id,
                 purchase_datetime = new Date(),
                 cart = user.usersCart,
-                amount = 0
             } = obj
             return obj
         } catch (error) {

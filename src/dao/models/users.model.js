@@ -3,16 +3,16 @@ import { Schema, model, SchemaTypes } from 'mongoose'
 const usersSchema = new Schema({
     name:{
         type: String,
-        required: true,
+        required: true
     },
     email:{
         type: String,
         required: true,
-        unique: true,
+        unique: true
     },
     password:{
         type: String,
-        required: true,
+        required: true
     },
     role:{
         type: String,
@@ -21,14 +21,18 @@ const usersSchema = new Schema({
     },
     githubAuth:{
         type: Boolean,
-        default: false,
+        default: false
     },
     usersCart:{
         cart:{
         type: SchemaTypes.ObjectId,
-        ref: 'Carts',
+        ref: 'Carts'
         },
         _id: false
+    },
+    token:{
+        type: String,
+        default: '0'
     }
 })
 

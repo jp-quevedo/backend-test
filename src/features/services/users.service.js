@@ -1,5 +1,4 @@
 import usersManager from '../../dao/managers/users.manager.js'
-import { transporter } from '../../utils/nodemailer.js'
 
 export const findAll = () => {
     const users = usersManager.findAll()
@@ -27,7 +26,7 @@ export const updateOne = ({ _id: id }, obj) => {
 }
 
 export const emailFilter = (email) => {
-    const emailResponse = usersManager.findByEmail(email)
+    const emailResponse = usersManager.findByEmail(email, req.body)
     return emailResponse
 }
 

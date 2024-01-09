@@ -1,5 +1,6 @@
 import productsManager from '../dao/managers/products.manager.js'
 import ticketsManager from '../dao/managers/tickets.manager.js'
+import usersManager from '../dao/managers/users.manager.js'
 import { 
     findAll,
     findById,
@@ -76,25 +77,27 @@ export const updateCart = async (req, res) => {
 }
 
 export const purchaseCart = async (req, res) => {
-    const user = req.session.passport.user
+    const user = await usersManager.findById(req.session.passport.user)
+    console.log(user)
     //importar manager buscar user... 
     //verificar cart vacio... 
     //importar manager de products traer todos los products (mandar params)
     //crear funcion para verificar stock recibir como params los products (recorrer stock del cart contra db)...
     //pasar carro por params al pcalculator
-    const purchaseAmount = await ticketsManager.priceCalculator()
-    if (!code || !purchaser || !purchase_datetime || !cart ) {
-        return res.status(400).json({ message: 'Some data is missing' });
-    }
-    try {
-        if (user.usersCart.productsInCart.quantity < productsInCart.product.stock) {
-            const newTicket = await ticketsManager.generateTicket({ ...obj, purchaser: user._id, cart: user.usersCart })
-            const newStock = await ticketsManager.stockCalculator()
-            res.status(200).json({ message: 'Ticket created', ticket: newTicket })
-        } else {
-            return res.status(400).json({ message: 'Sorry, there is not enough stock to procceed with your purchase, please try again with a smaller quantity'})
-        }
-    } catch (error) {
-        res.status(500).json({ message: error })
-    }
+
+    // const purchaseAmount = await ticketsManager.priceCalculator()
+    // if (!code || !purchaser || !purchase_datetime || !cart ) {
+    //     return res.status(400).json({ message: 'Some data is missing' });
+    // }
+    // try {
+    //     if (user.usersCart.productsInCart.quantity < productsInCart.product.stock) {
+    //         const newTicket = await ticketsManager.generateTicket({ ...obj, purchaser: user._id, cart: user.usersCart })
+    //         const newStock = await ticketsManager.stockCalculator()
+    //         res.status(200).json({ message: 'Ticket created', ticket: newTicket })
+    //     } else {
+    //         return res.status(400).json({ message: 'Sorry, there is not enough stock to procceed with your purchase, please try again with a smaller quantity'})
+    //     }
+    // } catch (error) {
+    //     res.status(500).json({ message: error })
+    // }
 }

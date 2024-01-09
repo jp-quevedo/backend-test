@@ -5,6 +5,8 @@ import handlebars from 'express-handlebars'
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
 import session from 'express-session'
+import swaggerUI from 'swagger-ui-express'
+import { Server } from 'socket.io'
 
 import cartsRouter from './routes/carts.router.js'
 import messagesRouter from './routes/messages.router.js'
@@ -23,7 +25,7 @@ import { __dirname, hashData } from './utils/utils.js'
 import { ErrorMessages } from './middlewares/errors/error.enum.js'
 import { generateProduct } from './utils/faker.js'
 import { logger } from './utils/winston.js'
-import { Server } from 'socket.io'
+import { swaggerSetup } from './utils/swaggerSpecs.js'
 import CustomError from './middlewares/errors/custom.error.js'
 
 import config from './config/dotenv.config.js'
@@ -56,6 +58,7 @@ app.use('/api/messages', messagesRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/sessions', sessionsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerSetup))
 
 app.use(compression())
 app.get('/mockingproducts', (req, res) => {
@@ -152,9 +155,26 @@ socketServer.on('connection', (socket) => {
         }
     })
 
-    socket.on('purchaseCart', async() => {
-        const purchasingCart = await ticketsManager.generateTicket()
-        socket.emit('cartPurchased', purchasingCart)
+    socket.on('purchaseCart', async(purchase) => {
+        const user = await usersManager.findByEmail(purchase.purchaser)
+        const cart = await cartsManager.findById(purchase.cart)
+        const cartProducts = cart.productsInCart
+        const productsArray = await productsManager.findAll()
+        if (user && cart) {
+            if (cart.productsInCart == '') {
+                return console.log('Cart requested is empty, add some products')
+            } else {
+                const filter = productsArray.filter(
+                    product => cartProducts.some(object => object.product._id == product._id)
+                )
+                console.log('cartProducts', cartProducts)
+                console.log('filter', filter)
+                const purchasingCart = await ticketsManager.generateTicket()
+                socket.emit('cartPurchased', purchasingCart)
+            }
+        } else {
+            return CustomError.createError(ErrorMessages.CART_NOT_FOUND)
+        }
     })
 
     // CHAT
@@ -266,4 +286,4 @@ socketServer.on('connection', (socket) => {
 
 })
 
-// entrega 16 (test compra) y 19 (password reset)
+// entrega 16 (test compra)

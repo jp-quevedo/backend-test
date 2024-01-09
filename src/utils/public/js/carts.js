@@ -26,6 +26,7 @@ const deletingCartId = document.getElementById('deletingCartId')
 // PURCHASE IMPORT
 
 const purchaseCartForm = document.getElementById('purchaseCartForm')
+const userEmail = document.getElementById('userEmail')
 const purchasingCartId = document.getElementById('purchasingCartId')
 
 // TABLE IMPORT
@@ -86,8 +87,9 @@ socketClient.on('cartUpdated', (newCartsArray) => {
 
 deletePFCartForm.onsubmit = (e) => {
     e.preventDefault()
-    if (deletePFCartId.value == '' ||
-    deletingProduct.value == ''
+    if (
+        deletePFCartId.value == '' ||
+        deletingProduct.value == ''
     ) {
         Swal.fire({
             icon: 'error',
@@ -147,9 +149,23 @@ socketClient.on('cartDeleted', (newCartsArray) => {
 
 // PURCHASE EVENT
 
-createCartForm.onsubmit = (e) => {
+purchaseCartForm.onsubmit = (e) => {
     e.preventDefault()
-    socketClient.emit('purchaseCart')
+    if(
+        purchasingCartId.value == '' ||
+        userEmail.value == ''
+    ) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Some data is missing!',
+          })
+    } else {
+        const purchase = { 
+            purchaser: userEmail.value,
+            cart: purchasingCartId.value
+        }
+        socketClient.emit('purchaseCart', purchase)
+    }
 }
 
 socketClient.on('cartPurchased', (purchasingCart) => {

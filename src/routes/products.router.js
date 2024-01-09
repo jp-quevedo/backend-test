@@ -13,7 +13,7 @@ import {
 
 const router = Router()
 
-router.get('/', findProducts)
+router.get('/', premiumMiddleware, findProducts)
 router.get('/:_id', findProductById)
 router.post('/', premiumMiddleware, upload.single('productimage.jpeg'), createProduct)
 router.delete('/:_id', adminMiddleware, deleteProduct)
